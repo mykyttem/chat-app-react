@@ -107,22 +107,49 @@ input::-moz-focus-inner {
 
 #submit {
   color: #707075;
-  margin-top: 40px;
-  transition: color 300ms;
+  margin-top: 30px;
+  transition: color 300ms, box-shadow 300ms;
+  display: inline-block;
+  padding: 2px 15px; 
+  border-radius: 5px;
+  text-decoration: none;
 }
-#submit:focus {
+
+#submit:hover {
   color: #f2f2f2;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
 }
+
 #submit:active {
   color: #d0d0d2;
+  box-shadow: none; 
 }
 
 
-input[type="password"],
-input[type="email"] {
+input[type="password"] {
   border: none; 
   border-bottom: 2px solid; 
   background: linear-gradient;
   background-size: 100% 2px;  
   background-repeat: no-repeat;    
 } 
+
+
+.google-signup-btn {
+  display: inline-block;
+  background-color: #4285F4;
+  color: #ffffff;
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.google-signup-btn:hover {
+  background-color: #357ae8;
+}

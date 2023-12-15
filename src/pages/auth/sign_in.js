@@ -11,9 +11,11 @@ const SignIn = () => {
                 </div>
 
                 <div class="eula">
+                    <button className="google-signup-btn">Login with Google</button> <br></br>
+
                     <NavLink to="/sign-up">
-                        Not have account?
-                    </NavLink> Go Sign Up
+                        <h3>Not have account?</h3>
+                    </NavLink> <h4>Go Sign Up</h4>
                 </div>
 
 
