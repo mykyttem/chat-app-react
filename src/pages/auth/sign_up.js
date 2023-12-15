@@ -9,6 +9,7 @@ const SignUp = () => {
     // data user
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [error, setError] = useState();
 
     // useNavigate hook
     const navigate = useNavigate();
@@ -17,6 +18,29 @@ const SignUp = () => {
     const submit = async (e) => {
         e.preventDefault();
 
+        // check format data
+        if (password.length < 6) {
+            setError('Password must be at least 6 characters long');
+            return;
+        }
+
+        if (/^\d/.test(password)) {
+            setError('Password should not start with a number');
+            return;
+        }
+
+        const isValidEmail = (email) => {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        if (!isValidEmail(email)) {
+            setError('Invalid email format');
+            return;
+        }
+
+
+        // send on server
         try {
             await axios.post("/sign-up", {
                 email: email,
@@ -79,6 +103,8 @@ const SignUp = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+
+                        {error && <div className="error">{error}</div>}
 
                         <input type="submit" id="submit" value="Submit" onClick={submit}/>
                     </form>
