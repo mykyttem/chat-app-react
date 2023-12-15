@@ -1,12 +1,14 @@
 import { createBrowserRouter, Route, createRoutesFromElements, Navigate } from "react-router-dom";
 
+// layouts
+import RootLayout from "../layouts/RootLayout";
 
 // pages
 import LoadedHome from "../pages/Home";
 import Page404 from "../pages/Page404";
 
-// layouts
-import RootLayout from "../layouts/RootLayout";
+import SignUp from "../pages/auth/sign_up";
+import SignIn from "../pages/auth/sign_in";
 
 
 const router = createBrowserRouter(
@@ -16,7 +18,8 @@ const router = createBrowserRouter(
             <Route path="404" element={ <Page404 /> } />
             <Route path="*" element={ <Navigate to="404" replace /> }/>
 
-   
+            <Route path="sign-up" element={ <SignUp /> } />
+            <Route path="sign-in" element={ <SignIn /> } />
         </Route>
     )
 )
