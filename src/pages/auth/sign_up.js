@@ -2,17 +2,20 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../../firebase";
 
+import { auth } from "../../firebase";
+import { loginWithGoogle } from "./authHelpers";
 import "../styles/auth.css";
 
 
 const SignUp = () => {
     // data user
-    const [displayName, setDisplayName] = useState();
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
-    const [error, setError] = useState();
+    const [state, setState] = useState({
+        displayName: "",
+        email: "",
+        password: "",
+        error: ""
+    });
 
     // useNavigate hook
     const navigate = useNavigate();
@@ -21,27 +24,29 @@ const SignUp = () => {
     const submit = async (e) => {
         e.preventDefault();
 
+        const { displayName, email, password } = state;
+
         // check format data
         if (password.length < 6) {
-            setError('Password must be at least 6 characters long');
+            setState({ ...state, error: 'Password must be at least 6 characters long' });
             return;
-        }
-
+          }
+      
         if (/^\d/.test(password)) {
-            setError('Password should not start with a number');
+            setState({ ...state, error: 'Password should not start with a number' });
             return;
         }
-
+    
         const isValidEmail = (email) => {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
-        }
-
+        };
+    
         if (!isValidEmail(email)) {
-            setError('Invalid email format');
+            setState({ ...state, error: 'Invalid email format' });
             return;
         }
-
+    
 
         // auth
         createUserWithEmailAndPassword(auth, email, password)
@@ -65,7 +70,7 @@ const SignUp = () => {
                 console.log(errorCode, errorMessage);
             });
     }
-
+    
 
     return (
         <div className="container">
@@ -74,8 +79,8 @@ const SignUp = () => {
                     Sign Up
                 </div >
 
-                <div class="eula">
-                    <button className="google-signup-btn">Login with Google</button> <br></br>
+                <div className="eula">
+                    <button className="google-signup-btn" onClick={() => loginWithGoogle(auth, navigate)}>Login with Google</button> <br></br>
 
                     <NavLink to="/sign-in">
                         <h3>Have account?</h3>
@@ -103,30 +108,30 @@ const SignUp = () => {
                 <div className="form">
                     <form onSubmit={submit}>
                         <label for="displayName">Display Name: </label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             id="displayName"
-                            value={displayName}
-                            onChange={(e) => setDisplayName(e.target.value)}
+                            value={state.displayName}
+                            onChange={(e) => setState({ ...state, displayName: e.target.value })}
                         />
 
-                        <label for="email">Email</label>
-                        <input 
-                            type="email" 
+                        <label htmlFor="email">Email</label>
+                        <input
+                            type="email"
                             id="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            value={state.email}
+                            onChange={(e) => setState({ ...state, email: e.target.value })}
                         />
 
-                        <label for="password">Password</label>
-                        <input 
-                            type="password" 
+                        <label htmlFor="password">Password</label>
+                        <input
+                            type="password"
                             id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={state.password}
+                            onChange={(e) => setState({ ...state, password: e.target.value })}
                         />
 
-                        {error && <div className="error">{error}</div>}
+                        {state.error && <div className="error">{state.error}</div>}
 
                         <input type="submit" id="submit" value="Submit" onClick={submit}/>
                     </form>

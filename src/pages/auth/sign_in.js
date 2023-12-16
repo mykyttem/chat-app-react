@@ -2,12 +2,16 @@ import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
 import { signInWithEmailAndPassword } from "firebase/auth";
+
+import { loginWithGoogle } from "./authHelpers";
 import { auth } from "../../firebase";
+
 
 const SignIn = () => {
     // data user
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+
 
     // useNavigate hook
     const navigate = useNavigate();
@@ -37,8 +41,8 @@ const SignIn = () => {
                     Sign In
                 </div>
 
-                <div class="eula">
-                    <button className="google-signup-btn">Login with Google</button> <br></br>
+                <div className="eula">
+                    <button className="google-signup-btn" onClick={() => loginWithGoogle(auth, navigate)}>Login with Google</button> <br></br>
 
                     <NavLink to="/sign-up">
                         <h3>Not have account?</h3>
