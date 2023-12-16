@@ -126,7 +126,8 @@ input::-moz-focus-inner {
 }
 
 
-input[type="password"] {
+input[type="password"],
+input[type="email"] {
   border: none; 
   border-bottom: 2px solid; 
   background: linear-gradient;

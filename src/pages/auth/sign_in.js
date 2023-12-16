@@ -1,7 +1,34 @@
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
 
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 const SignIn = () => {
+    // data user
+    const [email, setEmail] = useState();
+    const [password, setPassword] = useState();
+
+    // useNavigate hook
+    const navigate = useNavigate();
+
+    const submit = (e) => {
+        e.preventDefault();
+
+        // auth
+        signInWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            // Signed in 
+            navigate("/");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+
+            console.log(errorCode, errorMessage);
+          });
+    }
+
     return (
         <>
             <div className="container">
@@ -38,19 +65,25 @@ const SignIn = () => {
                         <path d="m 40,120.00016 239.99984,-3.2e-4 c 0,0 24.99263,0.79932 25.00016,35.00016 0.008,34.20084 -25.00016,35 -25.00016,35 h -239.99984 c 0,-0.0205 -25,4.01348 -25,38.5 0,34.48652 25,38.5 25,38.5 h 215 c 0,0 20,-0.99604 20,-25 0,-24.00396 -20,-25 -20,-25 h -190 c 0,0 -20,1.71033 -20,25 0,24.00396 20,25 20,25 h 168.57143" />
                     </svg>
                     <div className="form">
-                        <label for="email">Email</label>
-                        <input 
-                            type="email" 
-                            id="email"
-                        />
+                        <form onSubmit={submit}>
+                            <label for="email">Email</label>
+                            <input 
+                                type="email" 
+                                id="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
 
-                        <label for="password">Password</label>
-                        <input 
-                            type="password" 
-                            id="password"
-                        />
+                            <label for="password">Password</label>
+                            <input 
+                                type="password" 
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
 
-                        <input type="submit" id="submit" value="Submit"/>
+                            <input type="submit" id="submit" value="Submit" onClick={submit}/>
+                        </form>
                     </div>
                 </div>
             </div>

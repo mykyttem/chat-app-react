@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import axios from "axios";
+
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../../firebase";
 
 import "../styles/auth.css";
 
 
 const SignUp = () => {
     // data user
+    const [displayName, setDisplayName] = useState();
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [error, setError] = useState();
@@ -40,18 +43,29 @@ const SignUp = () => {
         }
 
 
-        // send on server
-        try {
-            await axios.post("/sign-up", {
-                email: email,
-                password: password
-            })
+        // auth
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
 
-            navigate("/sign-in");
-        } catch (e) {
-            console.log(`Error sign up: ${e}`)
-        }
+                updateProfile(user, { displayName: displayName })
+                    .catch((error) => {
+                        console.log("Error updating profile", error);
+                    });
+
+                // Signed up                 
+                navigate("/sign-in")
+            })
+            .catch((error) => {
+                console.log("error");
+
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                
+                console.log(errorCode, errorMessage);
+            });
     }
+
 
     return (
         <div className="container">
@@ -88,6 +102,14 @@ const SignUp = () => {
                 </svg>
                 <div className="form">
                     <form onSubmit={submit}>
+                        <label for="displayName">Display Name: </label>
+                        <input 
+                            type="text" 
+                            id="displayName"
+                            value={displayName}
+                            onChange={(e) => setDisplayName(e.target.value)}
+                        />
+
                         <label for="email">Email</label>
                         <input 
                             type="email" 
