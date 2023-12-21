@@ -1,0 +1,29 @@
+.home-container {
+    width: 1340px!important; 
+    height: 650px!important; 
+    margin-top: -90px;
+    flex-shrink: 0;
+    border-radius: 30px;
+    background: rgba(246, 224, 224, 0.77);
+}
+
+
+.block-not-auth {
+    background-color: #FFF;
+    width: 500px;
+    height: 300px;
+    border-radius: 15px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    .block-not-auth-content {
+        padding: 20px;
+    
+        .info-not-auth {
+            font-size: 20px;
+            color: #333;
+        }
+    }
+}

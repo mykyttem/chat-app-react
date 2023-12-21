@@ -1,0 +1,53 @@
+.panelChat {
+    width: 900px;
+    height: 70px;
+    margin-top: -650px;
+    margin-left: 440px;
+    flex-shrink: 0;
+    border-radius: 0px 20px 20px 5px;
+    background: #7767B9;
+
+    .companion {
+        position: absolute;
+        width: 50px;
+        height: 45px;
+        margin-top: 10px;
+        margin-left: 15px;
+        border-radius: 99.5px;
+    }
+
+    .name-companion {
+        position: absolute;
+        margin-left: 80px;
+        color: #FFF;
+        font-family: Inter;
+        font-size: 25px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 100%;
+    }
+
+    .icon-webcam-video {
+        position: absolute;
+        width: 40px;
+        height: 20px;
+        margin-left: 500px;
+        margin-top: 22px;
+    }
+
+    .icon-phone {
+        position: absolute;
+        width: 80px;
+        height: 30px;
+        margin-left: 650px;
+        margin-top: 18px;
+    }
+
+    .icon-settings {
+        position: absolute;
+        width: 80px;
+        height: 30px;
+        margin-left: 750px;
+        margin-top: 18px;
+    }
+}   

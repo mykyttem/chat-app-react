@@ -1,0 +1,42 @@
+.chat {
+    .bubble-own-message {
+        display: flex;
+        width: 320px;
+        height: 90px;
+        padding: 6px 12px;
+        align-items: flex-start;
+        border-radius: 20px 20px 0px 20px;
+        background: #8DA4F1;
+        margin-left: 1010px;
+        margin-top: 310px;
+
+        .text-own-message {
+            color: var(--Label-Color-Dark-Primary, #FFF);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 400;
+            margin-top: -1px;
+        }
+    }
+    
+    .bubble-companion-message {
+        display: flex;
+        width: 320px;
+        height: 90px;
+        padding: 6px 12px;
+        align-items: flex-start;
+        margin-left: 450px; 
+        border-radius: 20px 20px 20px 0px;
+        background: #FFF;
+        
+        .text-companion-message {
+            color: var(--Label-Color-Light-Primary, #000);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 22px;
+            font-style: normal;
+            font-weight: 400;
+            margin-top: -1px;
+        }
+    }
+}

@@ -6,12 +6,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  background-image: linear-gradient(to right, #6a11cb 0%, #2575fc 100%);
+  background-color: #a7bcff;
   height: 100vh;
   margin: 0;
   display: flex;
   align-items: center;
-  justify-content: center; 
+  justify-content: center;
+  overflow: hidden; 
 }
 
 code {
