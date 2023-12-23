@@ -18,11 +18,20 @@ import PanelChat from './components/panel_chat';
 
 const LoadedHome = () => {
     let [isAuth, setIsAuth] = useState(false);
+
+    // set data user if auth
+    const [userEmail, setUserEmail] = useState('');
+    const [userName, setUserName] = useState('');
+  
     
     useEffect(() => {
+        
+        // check if user auth
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 setIsAuth(true);
+                setUserEmail(user.email);
+                setUserName(user.displayName);
             } 
         })
     })
@@ -33,7 +42,7 @@ const LoadedHome = () => {
             {isAuth ? (
                 <div className="home-container">
                     <SideBar />
-                    <Profile />
+                    <Profile name={userName} email={userEmail}/>
                     <PanelChat />
                     <Chat />
                 </div>
