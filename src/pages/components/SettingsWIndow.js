@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 
 // firebase 
-import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider } from "firebase/auth";
+import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../firebase";
+import { storage, auth } from "../../firebase";
 
 // files
 import default_avatar from "../../assets/defaultAvatar_profile.png";
+import logout from "../../assets/icons/logout.svg";
 
 
 const Settings = ({ user, setModalWindow }) => {
@@ -148,6 +149,19 @@ const Settings = ({ user, setModalWindow }) => {
                 });
         }
     }   
+    
+    // button logout
+    const handleLogout = () => {
+        signOut(auth) 
+            .then(() => {
+                window.location.reload();
+            })
+            .catch((error) => {
+                setState_DataUser({ ...state_DataUser, alert: 'Fail! could not log out' })
+                console.error(error);
+            });
+    }
+
 
     return (
         <div className="modal-overlay">
@@ -222,6 +236,19 @@ const Settings = ({ user, setModalWindow }) => {
                 </div>
 
                 {state_DataUser.alert && <h2 className="text-handler-photo">{state_DataUser.alert}</h2>}
+
+                <button
+                    className="button_profile_logout" 
+                    aria-label="Button for Profile logout"
+                    onClick={handleLogout}
+                >
+
+                    <img 
+                        src={logout} 
+                        className="button_profile_logout_icon"
+                        alt="button_profile_logout"
+                    />
+                </button>
 
                 <button className="button-cancel" onClick={cancel_CloseModal}>Cancel</button>
                 <button className="button-save" onClick={apply}>Apply</button>

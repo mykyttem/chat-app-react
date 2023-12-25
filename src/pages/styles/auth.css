@@ -107,7 +107,7 @@ input::-moz-focus-inner {
 
 #submit {
   color: #707075;
-  margin-top: 30px;
+  margin-top: -10px;
   transition: color 300ms, box-shadow 300ms;
   display: inline-block;
   padding: 2px 15px; 

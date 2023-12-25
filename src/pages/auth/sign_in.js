@@ -11,7 +11,7 @@ const SignIn = () => {
     // data user
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
-
+    const [alert, setAlert] = useState();
 
     // useNavigate hook
     const navigate = useNavigate();
@@ -29,7 +29,10 @@ const SignIn = () => {
             const errorCode = error.code;
             const errorMessage = error.message;
 
-            console.log(errorCode, errorMessage);
+            console.error(errorCode);
+            console.error(errorMessage);
+            
+            setAlert('Fail! Login or Password incorrect');
           });
     }
 
@@ -85,6 +88,8 @@ const SignIn = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
+
+                            <h2>{alert}</h2>
 
                             <input type="submit" id="submit" value="Submit" onClick={submit}/>
                         </form>
