@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
     // your data
@@ -12,8 +13,8 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Authentication and get a reference to the service
 const auth = getAuth(app);
-
-// Create a root reference
 const storage = getStorage(app);
+const db = getFirestore(app);
 
-export { auth, storage };
+
+export { auth, storage, db };

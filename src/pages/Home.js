@@ -1,6 +1,11 @@
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
 import { useEffect, useState } from 'react';
+
+// firebase
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc } from "firebase/firestore";
+
+import { auth, db } from '../firebase';
+
 
 // styles
 import './styles/home.scss';
@@ -27,6 +32,19 @@ const LoadedHome = () => {
         // check if user auth
         onAuthStateChanged(auth, (user) => {
             if (user) {
+                // save in db data user
+                const userDocRef = doc(db, "users", user.uid);
+                
+                const dataUser = {
+                    name: user.displayName,
+                    email: user.email,
+                    phoneNumber: user.phoneNumber,
+                    photo: user.photoURL
+                }
+
+                setDoc(userDocRef, dataUser, { merge: true })
+
+                // set
                 setIsAuth(true);
                 setUser(user);
             } 
