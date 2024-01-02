@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 
-import "../styles/settings.scss";
+import "../../styles/profile/settings.scss";
 
 // firebase 
 import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut, updatePhoneNumber } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
-import { storage, auth } from "../../firebase";
+import { storage, auth } from "../../../firebase";
 
 // files
-import default_avatar from "../../assets/defaultAvatar_profile.png";
-import logout from "../../assets/icons/logout.svg";
+import default_avatar from "../../../assets/defaultAvatar_profile.png";
+import logout from "../../../assets/icons/logout.svg";
 
 const Settings = ({ user, setModalWindow }) => {
     /**

@@ -7,8 +7,8 @@ import RootLayout from "../layouts/RootLayout";
 import LoadedHome from "../pages/Home";
 import Page404 from "../pages/Page404";
 
-import SignUp from "../pages/auth/sign_up";
-import SignIn from "../pages/auth/sign_in";
+import SignUp from "../pages/controllers/auth/sign_up";
+import SignIn from "../pages/controllers/auth/sign_in";
 
 
 const router = createBrowserRouter(

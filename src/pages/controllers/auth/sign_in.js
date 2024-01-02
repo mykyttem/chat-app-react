@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 import { loginWithGoogle } from "./authHelpers";
-import { auth } from "../../firebase";
+import { auth } from "../../../firebase";
 
 
 const SignIn = () => {

@@ -10,15 +10,15 @@ import { auth, db } from '../firebase';
 // styles
 import './styles/home.scss';
 import './styles/side_bar.scss';
-import './styles/profile.scss';
-import './styles/panel_chat.scss';
-import './styles/chat.scss';
+import './styles/profile/profile.scss';
+import './styles/chat/panel_chat.scss';
+import './styles/chat/chat.scss';
 
-// components
-import SideBar from './components/SideBar';
-import Chat from './components/Chat';
-import Profile from './components/Profile';
-import PanelChat from './components/panel_chat';
+// controllers
+import SideBar from './controllers/sideBar/SideBar';
+import Chat from './controllers/chat/Chat';
+import Profile from './controllers/profile/Profile';
+import PanelChat from './controllers/chat/panel_chat';
 
 
 const LoadedHome = () => {

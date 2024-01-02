@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 
 // files
-import default_avatar from "../../assets/defaultAvatar_profile.png";
-import profile_settings from "../../assets/icons/profile_settings.svg";
-import Settings from "./SettingsWIndow";
+import default_avatar from "../../../assets/defaultAvatar_profile.png";
+import profile_settings from "../../../assets/icons/profile_settings.svg";
+import Settings from "./SettingsProfile";
 
 
 const Profile = ({ user }) => {

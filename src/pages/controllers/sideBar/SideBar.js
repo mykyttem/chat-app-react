@@ -3,13 +3,13 @@ import React, { useEffect, useState } from "react";
 // firebase
 import { collection, query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from "../../firebase";
+import { auth, db } from "../../../firebase";
 
 // svg
-import search from "../../assets/icons/search.svg";
+import search from "../../../assets/icons/search.svg";
 
 // avatar
-import avatar_companion from "../../assets/companion.png"
+import avatar_companion from "../../../assets/companion.png"
 
 
 /**

@@ -3,9 +3,9 @@ import { NavLink, useNavigate } from "react-router-dom";
 
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 
-import { auth } from "../../firebase";
+import { auth } from "../../../firebase";
 import { loginWithGoogle } from "./authHelpers";
-import "../styles/auth.css";
+import "../../styles/auth.css";
 
 
 const SignUp = () => {
