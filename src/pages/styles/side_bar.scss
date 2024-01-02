@@ -166,29 +166,26 @@
         }
     }
   
-
+    
     .chats {
-        display: flex;
-        flex-direction: column;
-
         .side-chat {
-            align-items: 50px;
+            position: relative;
+            margin-bottom: -120px;
 
+    
             .pin {
                 position: absolute;
                 width: 55px;
                 height: 500px;
-                flex-shrink: 0;
                 margin-left: 370px;
                 margin-top: -70px;
             }
-
+    
             .chat-companion-avatar {
                 width: 60px;
                 height: 59px;
                 margin-top: 150px;
                 margin-right: 10px;
-                flex-shrink: 0;
             }
     
             .chat-name-companion {
@@ -202,11 +199,10 @@
                 margin-left: 75px;
                 margin-top: -65px;
             }
-
+    
             .chat-message {
                 width: 287px;
                 height: 80px;
-                flex-shrink: 0;
                 color: #FFF;
                 font-family: Inter;
                 font-size: 20px;
@@ -216,15 +212,13 @@
                 margin-left: 75px;
                 margin-top: 5px;
             }
-
+    
             .line {
                 width: 440px;
                 height: 2px;
                 margin-top: -50px;
                 background: #8E7F7F;
             }
-
-            margin-bottom: -120px;
         }
-    }
+    }    
 }

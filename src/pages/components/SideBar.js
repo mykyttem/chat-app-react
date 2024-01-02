@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 // firebase
-import { collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from "../../firebase";
 
 // svg
 import search from "../../assets/icons/search.svg";
-import pin from "../../assets/icons/pin.svg";
 
 // avatar
 import avatar_companion from "../../assets/companion.png"
@@ -23,6 +22,9 @@ import avatar_companion from "../../assets/companion.png"
 
 
 const SideBar = () => {
+    // chats 
+    const [chats, setChats] = useState([]);
+
     // search user
     const [inputSearch, setInputSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -38,8 +40,9 @@ const SideBar = () => {
      * Fetches user data from Firebase Firestore.
     */
 
-    // db users
+    // collections
     const usersCollection = collection(db, 'users'); 
+    const chatsCollection = collection(db, 'chats');
 
     // handle search
     const handleSearch = async () => {
@@ -69,6 +72,38 @@ const SideBar = () => {
         if (inputSearch) {
             handleSearch();
         }
+
+        // get chats
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userUid = user.uid;
+                
+                // get data users from db
+                const userDocRef = doc(chatsCollection, userUid);
+                const userDocSnapshot = await getDoc(userDocRef);
+
+                if (userDocSnapshot.exists()) {
+                    const chatsUser = userDocSnapshot.data();
+
+                    // Extract all values from the chatsUser object
+                    const uid_users = Object.values(chatsUser);
+                    
+                    const users = await Promise.all(uid_users.map(async (uid) => {
+                        const q = query(usersCollection, where('uid', '==', uid));
+
+                        const querySnapshot = await getDocs(q);
+                        const users = querySnapshot.docs.map(doc => doc.data());
+
+                        return users;
+                    }));
+
+                    setChats(users);
+                }
+            }
+        });
+    
+        // Cleanup function to unsubscribe from the auth state changes when the component unmounts
+        return () => unsubscribe();
     }, [inputSearch, searchField]);
 
 
@@ -205,47 +240,29 @@ const SideBar = () => {
             // if user not type find user, display chats 
             ) : (
                 <div className="chats">
-                    <div className="side-chat">
-                        <img 
-                            src={pin} 
-                            className="pin" 
-                            alt="pin"
-                        />
+                    {chats.map((chat, index) => (
+                        <div key={index} className="chat">
+                            {chat.map((user) => (
+                                <div key={user.uid} className="side-chat">
+                                    <img 
+                                        src={avatar_companion} 
+                                        className="chat-companion-avatar" 
+                                        alt="chat-companion-avatar"
+                                    />
 
-                        <img 
-                            src={avatar_companion} 
-                            className="chat-companion-avatar" 
-                            alt="chat-companion-avatar"
-                        />
+                                    <h2 className="chat-name-companion">
+                                        {user.name}
+                                    </h2>
 
-                        <h2 className="chat-name-companion">
-                            Name
-                        </h2>
+                                    <h2 className="chat-message">
+                                        message
+                                    </h2>
 
-                        <h2 className="chat-message">
-                            message
-                        </h2>
-
-                        <div className="line"></div>
-                    </div>
-
-                    <div className="side-chat">
-                        <img 
-                            src={avatar_companion} 
-                            className="chat-companion-avatar" 
-                            alt="chat-companion-avatar"
-                        />
-
-                        <h2 className="chat-name-companion">
-                            Name 2
-                        </h2>
-
-                        <h2 className="chat-message">
-                            message 2
-                        </h2>
-
-                        <div className="line"></div>
-                    </div>
+                                    <div className="line"></div>
+                                </div>
+                            ))}
+                        </div>
+                    ))}
                 </div>
             )}
         </div>
