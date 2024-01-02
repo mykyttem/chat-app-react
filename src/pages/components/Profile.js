@@ -35,21 +35,12 @@ const Profile = ({ user }) => {
 
             {showModalWindow && <Settings user={user} setModalWindow={setModalWindow} /> }
         
-
-            {photoURL ? (
-                <img 
-                    src={photoURL} 
-                    className="avatar_profile" 
-                    alt="avatar profile" 
-                />
-            ) : (
-                <img 
-                    src={default_avatar} 
-                    className="avatar_profile" 
-                    alt="avatar profile" 
-                />
-            )}
-
+        
+            <img 
+                src={photoURL || default_avatar} 
+                className="avatar_profile" 
+                alt="avatar profile" 
+            />
 
             <h2 className="user-name">
                 {displayName}

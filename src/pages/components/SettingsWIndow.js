@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 
+import "../styles/settings.scss";
+
 // firebase 
-import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut } from "firebase/auth";
+import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut, updatePhoneNumber } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage, auth } from "../../firebase";
 
 // files
 import default_avatar from "../../assets/defaultAvatar_profile.png";
 import logout from "../../assets/icons/logout.svg";
-
 
 const Settings = ({ user, setModalWindow }) => {
     /**
@@ -19,7 +20,7 @@ const Settings = ({ user, setModalWindow }) => {
     */
 
     // current data user
-    const { displayName, email, uid } = user;
+    const { displayName, email, phoneNumber, uid } = user;
     
 
     // values for new data user
@@ -28,6 +29,7 @@ const Settings = ({ user, setModalWindow }) => {
         newEmail: email,
         currentPassword: '',
         newPassword: '',
+        newPhoneNumber: '',
         alert: ''
     });
 
@@ -65,7 +67,7 @@ const Settings = ({ user, setModalWindow }) => {
 
     // apply and update data user
     const apply = () => {
-        const { newName, currentPassword, newPassword, alert } = state_DataUser;
+        const { newName, currentPassword, newPassword, newPhoneNumber, alert } = state_DataUser;
         const { imageSrc, nameImage } = stateImage;
         
 
@@ -148,6 +150,16 @@ const Settings = ({ user, setModalWindow }) => {
                     console.error(error);   
                 });
         }
+
+        if (state_DataUser.phoneNumber !== newPhoneNumber) {
+            updatePhoneNumber(user, {"phoneNumber": phoneNumber})
+                .then(() => {
+                    setState_DataUser({ ...state_DataUser, alert: 'Succesful! New phone number updated' });
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
     }   
     
     // button logout
@@ -210,6 +222,8 @@ const Settings = ({ user, setModalWindow }) => {
                         onChange={(e) => setState_DataUser({ ...state_DataUser, newPassword: e.target.value })}
                     />
                 </div>
+
+
 
                 {stateImage.loadedImage ? (
                     <img
