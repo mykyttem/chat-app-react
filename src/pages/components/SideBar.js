@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 
 // firebase
-import { collection, query, where, getDocs } from "firebase/firestore";
-
-import { db } from "../../firebase";
+import { collection, query, where, getDocs, doc, setDoc } from "firebase/firestore";
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from "../../firebase";
 
 // svg
 import search from "../../assets/icons/search.svg";
@@ -64,7 +64,49 @@ const SideBar = () => {
         }
     }, [inputSearch, searchField]);
 
+
+    /**
+     * Handles the process of adding a user to a chat in Firebase Firestore.
+     * This function assumes Firebase authentication is set up and available.
+     * @param {string} select_user_uid - The UID of the user to be added to the chat.
+     * @param {string} name - The name or identifier of the user to be added to the chat.
+     * @throws {Error} Throws an error if the user is not authenticated during the process.
+    */
+   
+    const handleAddUser = async (select_user_uid, name) => {
+        try {
+        // Wait for the user to be authenticated using onAuthStateChanged.
+        const user = await new Promise((resolve, reject) => {
+            const unsubscribe = onAuthStateChanged(auth, (user) => {
+            unsubscribe();
+            if (user) {
+                resolve(user);
+            } else {
+                reject(new Error("User not authenticated"));
+            }
+            });
+        });
     
+        // Obtain the UID of the currently authenticated user.
+        const own_uid = user.uid;
+    
+        // Reference to the document in the 'chats' collection with the UID of the currently authenticated user.
+        const chatsDocRef = doc(db, 'chats', own_uid);
+    
+        // Document data to be updated or added to the 'chats' collection.
+        const docChat = {
+            [`companion_${name}`]: select_user_uid,
+        };
+    
+        // Update the document in the 'chats' collection, merging existing data if the document already exists.
+        await setDoc(chatsDocRef, docChat, { merge: true });
+        } catch (error) {
+        // Log an error message if there is an issue during the process.
+        console.error("Error updating document: ", error.message);
+        }
+    };
+    
+
     // Rendered component
     return (
         <div className="sidebar">
@@ -98,7 +140,7 @@ const SideBar = () => {
             {inputSearch ? (
                 <div className="result-search">
                     {searchResults.map((user) => (
-                        <div key={user.id} className="user">  
+                        <div key={user.id} className="user" onClick={() => handleAddUser(user.uid, user.name)}>  
                             <img 
                                 src={avatar_companion} 
                                 className="result-user-avatar" 
