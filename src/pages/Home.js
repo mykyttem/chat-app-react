@@ -39,7 +39,8 @@ const LoadedHome = () => {
                     name: user.displayName,
                     email: user.email,
                     phoneNumber: user.phoneNumber,
-                    photo: user.photoURL
+                    photo: user.photoURL,
+                    uid: user.uid
                 }
 
                 setDoc(userDocRef, dataUser, { merge: true })
