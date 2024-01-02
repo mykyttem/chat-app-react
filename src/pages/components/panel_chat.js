@@ -3,7 +3,7 @@ import React from "react";
 // icons svg
 import computer_webcam_video from "../../assets/icons/computer_webcam_video.svg";
 import phone from "../../assets/icons/phone.svg";
-import settings from "../../assets/icons/settings.svg";
+import settings from "../../assets/icons/settings_panelChat.svg";
 
 // avatar
 import avatar_companion from "../../assets/companion.png";

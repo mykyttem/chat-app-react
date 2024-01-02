@@ -1,27 +1,24 @@
 .profile {
-    position: fixed; 
-    top: 0;
-    right: 0;
+    position: absolute;
     width: 445px;
     height: 70px;
     margin-right: 993px; 
-    margin-top: 30px; 
+    margin-top: -650px; 
     flex-shrink: 0;
     border-radius: 20px 8px 20px 0px;
     background: #584DD4;
 
     .avatar_profile {
         position: absolute;
-        width: 55px;
-        height: 40px;
+        width: 65px;
+        height: 52px;
         flex-shrink: 0;
-        margin-left: 270px;
-        margin-top: 12px;
+        margin-left: 220px;
+        margin-top: 11px;
     }
 
     .user-name {
         position: absolute;
-        margin-left: 330px;
         color: #FFF;
         font-feature-settings: 'clig' off, 'liga' off;
         text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -30,6 +27,8 @@
         font-style: normal;
         font-weight: 800;
         line-height: 120%;
+        margin-left: 310px;
+        margin-top: 20px;
     }
 
     .button_profile_settings {
@@ -53,190 +52,5 @@
             max-width: 100%;
             display: block;
         }        
-    }
-
-    
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    
-        .modal {
-            position: relative; 
-            background: #FFFFFF;
-            padding: 20px;
-            width: 1250px;
-            height: 517px;
-            flex-shrink: 0;
-            border-radius: 30px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            overflow: hidden;
-    
-            .close {
-                position: absolute; 
-                top: 10px;
-                right: 10px;
-                cursor: pointer;
-                font-size: 20px;
-                color: #333;
-                background: none;
-                border: none;
-                padding: 0;
-            }
-
-            .title-name, .title-email, .title-password, .title-current-password {
-                color: #1C1C1C;
-                font-family: Roboto;
-                font-size: 20px;
-                font-style: normal;
-                font-weight: 600;
-                line-height: normal;
-            }
-
-            .change-name, .change-email, .change-password, .current-password {
-                width: 350px;
-                height: 60px;
-                flex-shrink: 0;
-                border-radius: 25px;
-                border: 2px solid #858585;
-                background: #FFF;
-    
-                .type-change-name, .type-change-email, .type-change-password, .type-current-password {
-                    color: #858585;
-                    font-family: Roboto;
-                    font-size: 24px;
-                    font-style: normal;
-                    font-weight: 500;
-                    line-height: normal;  
-                    border: none;    
-                    text-align: center;
-                }
-            }
-            
-
-            .change-photo {
-                position: relative;
-                width: 350px;
-                height: 60px;
-                flex-shrink: 0;
-                border-radius: 25px;
-                border: 2px solid #858585;
-                background: #FFF;  
-                margin-left: 550px;
-                margin-top: -410px;
-                cursor: pointer;
-                overflow: hidden;
-
-                .text-upload {
-                    color: #858585;
-                    font-family: Roboto;
-                    font-size: 24px;
-                    font-style: normal;
-                    font-weight: 550;
-                    line-height: normal;
-                    padding: 10px;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    display: inline-block;
-                    margin-left: 120px;
-                    margin-top: 1px;
-                }
-
-                .upload-file {
-                    position: absolute;
-                    width: 100%; 
-                    height: 100%;
-                    cursor: pointer;
-                    left: 0;
-                    overflow: hidden;
-                    opacity: 0;
-                }
-                
-            }
-            .text-handler-photo {
-                position: absolute;
-                width: 560px; 
-                height: 50px;
-                margin-left: 650px;
-                color:#1C1C1C;
-            }
-
-            .current-photo {
-                position: absolute;
-                width: 130px;
-                height: 130px; 
-                flex-shrink: 0;
-                margin-left: 960px;
-                margin-top: -470px; 
-                border-radius: 50%; 
-                object-fit: cover; 
-                border: 2px solid #fff; 
-            }           
-            
-            .button_profile_logout {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                width: 80px; 
-                height: 80px;
-                cursor: pointer;
-                background: none; 
-                border: none;
-                padding: 0; 
-                position: absolute;
-                border-radius: 0;
-                margin-top: -110px;
-                margin-left: 1130px; 
-        
-                .button_profile_logout_icon {
-                    width: 100%;
-                    height: auto;
-                    max-width: 100%;
-                    display: block;
-                    background-color: #d9d9d94e;
-                    border-radius: 30px 30px 30px 30px;
-                }        
-                
-                &:hover {
-                    background-color: #d9d9d9e6;
-                    border-radius: 30px 30px 30px 30px;
-                }
-            }
-
-            .button-cancel {
-                width: 223px;
-                height: 51px;
-                flex-shrink: 0;
-                border-radius: 25px;
-                border: 2px solid #5B73CA;
-                background: #FFF;
-                margin-left: 650px;
-                margin-top: 300px;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: FF0000;
-                }
-            }
-
-            .button-save {
-                width: 223px;
-                height: 51px;
-                flex-shrink: 0;
-                border-radius: 25px;
-                background: #5364a1;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: #5042c0;
-                }
-            }
-        }
     }
 }    
