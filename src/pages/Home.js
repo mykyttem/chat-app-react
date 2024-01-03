@@ -9,8 +9,13 @@ import { auth, db } from '../firebase';
 
 // styles
 import './styles/home.scss';
-import './styles/side_bar.scss';
+
+import './styles/sideBar/side_bar.scss';
+import "./styles/sideBar/chats.scss";
+import './styles/sideBar/modalWindow.scss';
+
 import './styles/profile/profile.scss';
+
 import './styles/chat/panel_chat.scss';
 import './styles/chat/chat.scss';
 

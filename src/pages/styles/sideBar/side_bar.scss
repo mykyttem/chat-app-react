@@ -1,0 +1,91 @@
+.sidebar {
+    width: 440px;
+    height: 650px;
+    margin-top: 90px; 
+    border-radius: 20px 15px 20px 20px;
+    background: rgba(68, 65, 218, 0.77);  
+    
+    .block-search {
+        .field-search-user {
+            position: absolute;
+            width: 360px !important;
+            height: 40px !important;
+            margin-left: 5px;
+            margin-top: 90px;
+            max-width: 360px;
+            border-radius: 20px;
+            background: #FFF;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.15);
+            
+            .text-field {
+                position: absolute;
+                color: rgba(0, 0, 0, 0.34);
+                font-family: Inter;
+                font-size: 27px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                margin-left: 40px;
+                box-sizing: border-box;
+                border-bottom: none;
+            }
+            
+            .search {
+                position: absolute;
+                width: 25px;
+                height: 81px;
+                flex-shrink: 0;
+                margin-top: -20px;
+            }          
+    
+        }
+
+        .select-field {
+            position: absolute;
+            width: 65px;
+            margin-left: 370px;
+            margin-top: 95px;
+            appearance: none;
+            border: none;
+            padding: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #333;
+            cursor: pointer;
+        }
+    }        
+
+    .result-search {
+        .user {
+            &:hover {
+                background-color: rgba(255, 255, 255, 0.1);
+                cursor: pointer;
+            }  
+
+            position: absolute;
+            width: 35%;
+            height: 100px; 
+            margin-top: 150px;
+            transition: background-color 0.3s ease;
+
+            .result-user-avatar {
+                width: 60px;
+                height: 59px;
+                margin-top: 10px; 
+                margin-right: 10px;
+            }
+
+            .result-user-name {
+                color: #FFF;
+                font-family: Inter;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 500;
+                line-height: normal;
+                margin-left: 75px;
+                margin-top: -65px;
+            }
+        }
+    }
+}

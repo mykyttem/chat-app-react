@@ -1,273 +1,75 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
-// firebase
-import { collection, query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from "../../../firebase";
+// Firebase
+import { collection } from "firebase/firestore";
+import { db } from "../../../firebase";
 
-// svg
-import search from "../../../assets/icons/search.svg";
-
-// avatar
-import avatar_companion from "../../../assets/companion.png"
+// Components
+import Chats from "./Chats";
+import SearchUsers from "./Search";
+import SearchResultsUsers from "./SearchResults";
+import CheckProfileUser from "./UserProfile";
 
 
 /**
- * User search 
- * Selected user from resutls searching
- * Display data user in modal window
- * Add user
- * Chats
+ * Sidebar component that includes user search, selected user display, 
+ * user data modal, adding user, and chats.
 */
 
 
 const SideBar = () => {
-    // chats 
-    const [chats, setChats] = useState([]);
-
-    // search user
+    // State for user search
     const [inputSearch, setInputSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const [searchField, setSearchField] = useState('name');
 
-    // modal, data profile selected user
-    const [isModalOpen, setIsModalOpen] = useState(false); 
+    // State for modal and selected user data
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
 
+    // Firestore collection for users
+    const usersCollection = collection(db, 'users');
 
     /**
      * Handles user search based on input and search field.
      * Fetches user data from Firebase Firestore.
     */
 
-    // collections
-    const usersCollection = collection(db, 'users'); 
-    const chatsCollection = collection(db, 'chats');
 
-    // handle search
-    const handleSearch = async () => {
-        try {
-            let q;
-    
-            if (searchField === 'name') {
-                q = query(usersCollection, where('name', '==', inputSearch));
-            } else if (searchField === 'email') {
-                q = query(usersCollection, where('email', '==', inputSearch));
-            } else if (searchField === 'phoneNumber') {
-                q = query(usersCollection, where('phoneNumber', '==', inputSearch));
-            }
-    
-            const querySnapshot = await getDocs(q);
-            const results = querySnapshot.docs.map(doc => doc.data());
-    
-            setSearchResults(results);
-        } catch (error) {
-            setSearchResults([]);
-            console.error('Error fetching user data:', error.message);
-        }
-    };
-    
-    // Effect to trigger search when input or search field changes
-    useEffect(() => {
-        if (inputSearch) {
-            handleSearch();
-        }
-
-        // get chats
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userUid = user.uid;
-                
-                // get data users from db
-                const userDocRef = doc(chatsCollection, userUid);
-                const userDocSnapshot = await getDoc(userDocRef);
-
-                if (userDocSnapshot.exists()) {
-                    const chatsUser = userDocSnapshot.data();
-
-                    // Extract all values from the chatsUser object
-                    const uid_users = Object.values(chatsUser);
-                    
-                    const users = await Promise.all(uid_users.map(async (uid) => {
-                        const q = query(usersCollection, where('uid', '==', uid));
-
-                        const querySnapshot = await getDocs(q);
-                        const users = querySnapshot.docs.map(doc => doc.data());
-
-                        return users;
-                    }));
-
-                    setChats(users);
-                }
-            }
-        });
-    
-        // Cleanup function to unsubscribe from the auth state changes when the component unmounts
-        return () => unsubscribe();
-    }, [inputSearch, searchField]);
-
-
-    /**
-     * Handles the process of adding a user to a chat in Firebase Firestore.
-     * This function assumes Firebase authentication is set up and available.
-     * @param {string} select_user_uid - The UID of the user to be added to the chat.
-     * @param {string} name - The name or identifier of the user to be added to the chat.
-     * @throws {Error} Throws an error if the user is not authenticated during the process.
-    */
-
-    // add user in DB 
-    const handleAddUser = async (select_user_uid, name) => {
-        try {
-            // Wait for the user to be authenticated using onAuthStateChanged.
-            const user = await new Promise((resolve, reject) => {
-                const unsubscribe = onAuthStateChanged(auth, (user) => {
-                unsubscribe();
-                if (user) {
-                    resolve(user);
-                } else {
-                    reject(new Error("User not authenticated"));
-                }
-                });
-            });
-        
-            // Obtain the UID of the currently authenticated user.
-            const own_uid = user.uid;
-        
-            // Reference to the document in the 'chats' collection with the UID of the currently authenticated user.
-            const chatsDocRef = doc(db, 'chats', own_uid);
-        
-            // Document data to be updated or added to the 'chats' collection.
-            const docChat = {
-                [`companion_${name}`]: select_user_uid,
-            };
-        
-            // Update the document in the 'chats' collection, merging existing data if the document already exists.
-            await setDoc(chatsDocRef, docChat, { merge: true });
-        } catch (error) {
-            // Log an error message if there is an issue during the process.
-            console.error("Error updating document: ", error.message);
-        }
-    };
-
-
-    // in modal window display data user
-    const handleCheck_SelectedUserProfile = async (selectedUser) => {
-        try {
-            // Fetch user data from the database based on the UID
-            const q = query(usersCollection, where('uid', '==', selectedUser.uid));
-            const querySnapshot = await getDocs(q);
-        
-            // Extract user data from the query snapshot
-            const userData = querySnapshot.docs.map(doc => doc.data());
-            setSelectedUser(userData);
-
-            // Open the modal
-            setIsModalOpen(true);
-        } catch (error) {
-            console.error('Error fetching user data:', error.message);
-        }
-    };
-      
-
+    // Display the main sidebar content
     return (
         <div className="sidebar">
-            <div className="block-search">
-                <div className="field-search-user">
-                    <img 
-                        src={search} 
-                        className="search" 
-                        alt="search"
-                    />
-                    <input 
-                        type="text" 
-                        className="text-field" 
-                        value={inputSearch}
-                        onChange={(e) => setInputSearch(e.target.value)}
-                        placeholder="Find a user..."
-                    />
-                </div>
-                <select
-                    value={searchField}
-                    className="select-field"
-                    onChange={(e) => setSearchField(e.target.value)}
-                >
-                    <option value="name">Name</option>
-                    <option value="email">Email</option>
-                    <option value="phoneNumber">Phone Number</option>
-                </select>
-            </div>
+          
+            <SearchUsers
+                inputSearch={inputSearch}
+                setInputSearch={setInputSearch}
+                setSearchResults={setSearchResults}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedUser={setSelectedUser}
+                usersCollection={usersCollection}
+            />
 
+            
             {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="user-profile-modal">
-                        {selectedUser.map(user => (
-                            <div>
-                                <img src={user.photoURL} alt="User Avatar" />
-                                <h2>{user.name}</h2>
-                                <p>Email: {user.email}</p>
-                                <p>Phone Number: {user.phoneNumber}</p>
-
-                                <button onClick={() => handleAddUser(user.uid, user.name)}>
-                                    Add in contacts 
-                                </button>
-
-                                <button className="close-button" onClick={() => setIsModalOpen(false)}>
-                                    Close
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                </div>
+                <CheckProfileUser
+                setIsModalOpen={setIsModalOpen}
+                selectedUser={selectedUser}
+                usersCollection={usersCollection}
+                />
             )}
-    
+
+        
             {inputSearch ? (
-                <div className="result-search">
-                    {searchResults.map((user) => (
-                        <div key={user.id} className="user" onClick={() => handleCheck_SelectedUserProfile(user)}>  
-                            <img 
-                                src={avatar_companion} 
-                                className="result-user-avatar" 
-                                alt="result user avatar"
-                            />
-
-                            <h2 className="result-user-name">
-                                {user.name}
-                            </h2>
-                        </div>
-                    ))}
-                </div>
-
-            // if user not type find user, display chats 
+                <SearchResultsUsers
+                searchResults={searchResults}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedUser={setSelectedUser}
+                />
             ) : (
-                <div className="chats">
-                    {chats.map((chat, index) => (
-                        <div key={index} className="chat">
-                            {chat.map((user) => (
-                                <div key={user.uid} className="side-chat">
-                                    <img 
-                                        src={avatar_companion} 
-                                        className="chat-companion-avatar" 
-                                        alt="chat-companion-avatar"
-                                    />
-
-                                    <h2 className="chat-name-companion">
-                                        {user.name}
-                                    </h2>
-
-                                    <h2 className="chat-message">
-                                        message
-                                    </h2>
-
-                                    <div className="line"></div>
-                                </div>
-                            ))}
-                        </div>
-                    ))}
-                </div>
+                <Chats usersCollection={usersCollection} />
             )}
         </div>
-    )
-} 
- 
+    );
+};
+
 
 export default SideBar;
