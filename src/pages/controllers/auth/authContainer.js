@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword, updateProfile, signInWithEmailAndPassword } from "firebase/auth";
 
-import { auth } from "../../../firebase";
+import { auth, db } from "../../../firebase";
+import { doc, setDoc } from "firebase/firestore";
+
 
 
 /**
@@ -67,6 +69,19 @@ const AuthContainer = ({ children, isSignUp, navigate }) => {
                         // Update user profile with display name
                         updateProfile(user, { displayName: displayName })
                             .then(() => {
+                                // save in DB
+                                const userDocRef = doc(db, "users", user.uid);
+                                
+                                const dataUser = {
+                                    name: user.displayName,
+                                    email: user.email,
+                                    phoneNumber: user.phoneNumber,
+                                    photo: user.photoURL,
+                                    uid: user.uid
+                                }
+
+                                setDoc(userDocRef, dataUser, { merge: true })
+
                                 // Navigate to sign-in after successful sign-up
                                 navigate("/sign-in");
                             })

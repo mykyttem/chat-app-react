@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react';
 
 // firebase
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, setDoc } from "firebase/firestore";
 
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 
 
 // styles
@@ -32,24 +31,11 @@ const LoadedHome = () => {
     // set data user if auth
     const [user, setUser] = useState();
 
-    
+
     useEffect(() => {
         // check if user auth
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // save in db data user
-                const userDocRef = doc(db, "users", user.uid);
-                
-                const dataUser = {
-                    name: user.displayName,
-                    email: user.email,
-                    phoneNumber: user.phoneNumber,
-                    photo: user.photoURL,
-                    uid: user.uid
-                }
-
-                setDoc(userDocRef, dataUser, { merge: true })
-
                 // set
                 setIsAuth(true);
                 setUser(user);
