@@ -11,6 +11,7 @@ import { storage, auth } from "../../../firebase";
 import default_avatar from "../../../assets/defaultAvatar_profile.png";
 import logout from "../../../assets/icons/logout.svg";
 
+
 const Settings = ({ user, setModalWindow }) => {
     /**
      *  state_DataUser - for change data in modal window
@@ -20,7 +21,7 @@ const Settings = ({ user, setModalWindow }) => {
     */
 
     // current data user
-    const { displayName, email, phoneNumber, uid } = user;
+    const { displayName, email, phoneNumber, photoURL, uid } = user;
     
 
     // values for new data user
@@ -233,7 +234,7 @@ const Settings = ({ user, setModalWindow }) => {
                     />
                     ) : (
                     <img 
-                        src={default_avatar} 
+                        src={photoURL || default_avatar} 
                         className="current-photo" 
                         alt="default avatar" 
                     />
@@ -251,19 +252,14 @@ const Settings = ({ user, setModalWindow }) => {
 
                 {state_DataUser.alert && <h2 className="text-handler-photo">{state_DataUser.alert}</h2>}
 
-                <button
-                    className="button_profile_logout" 
-                    aria-label="Button for Profile logout"
+            
+                <img 
+                    src={logout} 
+                    className="button_profile_logout_icon"
+                    alt="button_profile_logout"
                     onClick={handleLogout}
-                >
-
-                    <img 
-                        src={logout} 
-                        className="button_profile_logout_icon"
-                        alt="button_profile_logout"
-                    />
-                </button>
-
+                />
+            
                 <button className="button-cancel" onClick={cancel_CloseModal}>Cancel</button>
                 <button className="button-save" onClick={apply}>Apply</button>
             </div>

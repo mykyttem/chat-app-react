@@ -31,26 +31,13 @@
         margin-top: 20px;
     }
 
-    .button_profile_settings {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+
+    .button_profile_settings_icon {
         width: 40px; 
         height: 40px;
         cursor: pointer;
-        background: none; 
-        border: none;
-        padding: 0; 
         position: absolute;
-        border-radius: 0;
         margin-top: 10px;
         margin-left: 10px; 
-
-        .button_profile_settings_icon {
-            width: 100%;
-            height: auto;
-            max-width: 100%;
-            display: block;
-        }        
-    }
+    }        
 }    

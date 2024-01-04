@@ -133,36 +133,25 @@
             object-fit: cover; 
             border: 2px solid #fff; 
         }           
-        
-        .button_profile_logout {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+
+    
+        .button_profile_logout_icon {
+            background-color: #d9d9d94e;
+            border-radius: 30px 30px 30px 30px;
             width: 80px; 
             height: 80px;
             cursor: pointer;
             background: none; 
-            border: none;
-            padding: 0; 
             position: absolute;
-            border-radius: 0;
             margin-top: -110px;
             margin-left: 1130px; 
     
-            .button_profile_logout_icon {
-                width: 100%;
-                height: auto;
-                max-width: 100%;
-                display: block;
-                background-color: #d9d9d94e;
-                border-radius: 30px 30px 30px 30px;
-            }        
-            
             &:hover {
                 background-color: #d9d9d9e6;
                 border-radius: 30px 30px 30px 30px;
             }
-        }
+        }        
+    
 
         .button-cancel {
             width: 223px;

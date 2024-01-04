@@ -21,17 +21,13 @@ const Profile = ({ user }) => {
 
     return (
         <div className="profile">
-            <button
+            <img 
+                src={profile_settings} 
+                className="button_profile_settings_icon"
+                alt="button_profile_settings"
                 onClick={openModal_Settings}
-                className="button_profile_settings"
-                aria-label="Button for Profile Settings"
-            >
-                <img 
-                    src={profile_settings} 
-                    className="button_profile_settings_icon"
-                    alt="button_profile_settings"
-                />
-            </button> 
+            />
+          
 
             {showModalWindow && <Settings user={user} setModalWindow={setModalWindow} /> }
         
