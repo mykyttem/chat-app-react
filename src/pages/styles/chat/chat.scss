@@ -8,7 +8,7 @@
         border-radius: 20px 20px 0px 20px;
         background: #8DA4F1;
         margin-left: 1010px;
-        margin-top: 310px;
+        margin-top: 150px;
 
         .text-own-message {
             color: var(--Label-Color-Dark-Primary, #FFF);
@@ -38,5 +38,65 @@
             font-weight: 400;
             margin-top: -1px;
         }
+    }
+
+    .block-input {
+        width: 67%;
+        height: 90px;
+        background: #FFF;
+        margin-left: 440px;
+        margin-top: 11.8%;
+        border-radius: 20px 20px 20px 0px;
+
+        .field-input {
+            position: absolute;
+            color: rgba(0, 0, 0, 0.34);
+            font-family: Inter;
+            font-size: 27px;
+            font-style: normal;
+            font-weight: 500;
+            line-height: normal;
+            margin-left: 10px;
+            box-sizing: border-box;
+            border-bottom: none;
+            margin-top: 25px;
+            max-width: 44%;
+        }
+
+        .clip {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            margin-left: 690px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .img {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            margin-left: 750px;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .box-send {
+            position: absolute;
+            width: 4.1%;
+            height: 60px;
+            margin-left: 820px;
+            margin-top: 15px;
+            border-radius: 20px 20px 20px 20px;
+            background: rgba(68, 65, 218, 0.77);
+            cursor: pointer;
+
+            .send {
+                width: 50px;
+                height: 50px;
+                margin-left: 2px;
+                margin-top: 6px;
+            }
+        } 
     }
 }
