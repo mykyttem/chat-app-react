@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 // firebase
 import { onAuthStateChanged } from 'firebase/auth';
-
 import { auth } from '../firebase';
 
 
@@ -48,10 +48,10 @@ const LoadedHome = () => {
         <>
             {isAuth ? (
                 <div className="home-container">
-                    <SideBar />
+                    <SideBar currentUser={user} />
                     <Profile user={user} />
                     <PanelChat />
-                    <Chat />
+                    <Chat currentUser={user} />
                 </div>
             ) : (
                 <div className="block-not-auth">

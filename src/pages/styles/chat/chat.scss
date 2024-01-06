@@ -1,55 +1,70 @@
 .chat {
-    .bubble-own-message {
-        display: flex;
-        width: 320px;
-        height: 90px;
-        padding: 6px 12px;
-        align-items: flex-start;
-        border-radius: 20px 20px 0px 20px;
-        background: #8DA4F1;
-        margin-left: 1010px;
-        margin-top: 150px;
-
-        .text-own-message {
-            color: var(--Label-Color-Dark-Primary, #FFF);
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 22px;
-            font-style: normal;
-            font-weight: 400;
-            margin-top: -1px;
-        }
-    }
+    margin-left: 500px;
     
-    .bubble-companion-message {
+    .messages { 
+        position: fixed;
         display: flex;
-        width: 320px;
-        height: 90px;
-        padding: 6px 12px;
-        align-items: flex-start;
-        margin-left: 450px; 
-        border-radius: 20px 20px 20px 0px;
-        background: #FFF;
+        flex-direction: column;
+        width: 905px;
+        left: 480px;
+        height: 490px; 
+    
+
+        .bubble-own-message {
+            position: relative;
+            display: flex;
+            width: 320px;
+            height: 90px;
+            padding: 6px 12px;
+            align-items: flex-start;
+            border-radius: 20px 20px 0px 20px;
+            background: #8DA4F1;
+            margin-left: 1010px;
+            margin-top: 150px;
+    
+            .text-own-message {
+                color: var(--Label-Color-Dark-Primary, #FFF);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 22px;
+                font-style: normal;
+                font-weight: 400;
+                margin-top: -1px;
+            }
+        }
         
-        .text-companion-message {
-            color: var(--Label-Color-Light-Primary, #000);
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 22px;
-            font-style: normal;
-            font-weight: 400;
-            margin-top: -1px;
+        .bubble-companion-message {
+            display: flex;
+            width: 320px;
+            height: 90px;
+            padding: 6px 12px;
+            align-items: flex-start;
+            margin-left: 450px; 
+            border-radius: 20px 20px 20px 0px;
+            background: #FFF;
+            
+            .text-companion-message {
+                color: var(--Label-Color-Light-Primary, #000);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 22px;
+                font-style: normal;
+                font-weight: 400;
+                margin-top: -1px;
+            }
         }
     }
+
 
     .block-input {
-        width: 67%;
+        position: fixed;
+        width: 900px;
         height: 90px;
         background: #FFF;
-        margin-left: 440px;
-        margin-top: 11.8%;
         border-radius: 20px 20px 20px 0px;
-
+        margin-left: 415px; 
+        transform: translateX(-50%);
+        bottom: 33px; 
+        
         .field-input {
-            position: absolute;
             color: rgba(0, 0, 0, 0.34);
             font-family: Inter;
             font-size: 27px;
@@ -62,16 +77,16 @@
             margin-top: 25px;
             max-width: 44%;
         }
-
+    
         .clip {
             position: absolute;
             width: 50px;
             height: 50px;
-            margin-left: 690px;
-            margin-top: 15px;
+            margin-left: 350px;
+            margin-top: 17px;
             cursor: pointer;
         }
-
+    
         .img {
             position: absolute;
             width: 50px;
@@ -80,17 +95,17 @@
             margin-top: 15px;
             cursor: pointer;
         }
-
+    
         .box-send {
             position: absolute;
-            width: 4.1%;
+            width: 6%;
             height: 60px;
             margin-left: 820px;
-            margin-top: 15px;
+            margin-top: -40px;
             border-radius: 20px 20px 20px 20px;
             background: rgba(68, 65, 218, 0.77);
             cursor: pointer;
-
+    
             .send {
                 width: 50px;
                 height: 50px;
@@ -99,4 +114,5 @@
             }
         } 
     }
+    
 }

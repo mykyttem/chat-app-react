@@ -1,8 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { query, where, getDocs, getDoc, doc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+
+import { query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from "../../../firebase";
+
 import avatar_companion from "../../../assets/companion.png";
+
 
 
 /**
@@ -12,7 +16,10 @@ import avatar_companion from "../../../assets/companion.png";
 */
 
 
-const Chats = ({ usersCollection }) => {
+
+const Chats = ({ usersCollection, currentUser }) => {
+    const navigate = useNavigate();
+
     // State to store the list of chats
     const [chats, setChats] = useState([]);
 
@@ -28,7 +35,7 @@ const Chats = ({ usersCollection }) => {
                 const userUid = user.uid;
 
                 // Get data users from the 'chats' collection
-                const userDocRef = doc(db, 'chats', userUid);
+                const userDocRef = doc(db, 'own-chats', userUid);
                 const userDocSnapshot = await getDoc(userDocRef);
 
                 if (userDocSnapshot.exists()) {
@@ -62,11 +69,33 @@ const Chats = ({ usersCollection }) => {
     }, [getChats]);
 
 
+    const handleSelect = async ({ user }) => {
+        // check whether the group(chats in firestore) exists, if not create
+        const combinedId = 
+            currentUser.uid > user.uid 
+            ? currentUser.uid + user.uid 
+            : user.uid + currentUser.uid
+
+        try {
+            const res = await getDoc(doc(db, "chats", combinedId));
+
+            if(!res.exists()) {
+                // create chat in chats collection
+                await setDoc(doc(db, "chats", combinedId), { messages: [] });
+            }
+
+            navigate(`/chat/${combinedId}`);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     // Render the list of chats
     return (
-        <ul className="chats">
+        <ul className="chats">  
             {chats.flat().map((user, index) => (
-                <li key={index} className="side-chat">
+                <li key={index} className="side-chat" onClick={() => handleSelect({ user: user })}>
                     
                     <img
                         src={avatar_companion}

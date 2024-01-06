@@ -17,7 +17,7 @@ import CheckProfileUser from "./UserProfile";
 */
 
 
-const SideBar = () => {
+const SideBar = ({ currentUser }) => {
     // State for user search
     const [inputSearch, setInputSearch] = useState('');
     const [searchResults, setSearchResults] = useState([]);
@@ -28,6 +28,7 @@ const SideBar = () => {
 
     // Firestore collection for users
     const usersCollection = collection(db, 'users');
+
 
     /**
      * Handles user search based on input and search field.
@@ -51,21 +52,24 @@ const SideBar = () => {
             
             {isModalOpen && (
                 <CheckProfileUser
-                setIsModalOpen={setIsModalOpen}
-                selectedUser={selectedUser}
-                usersCollection={usersCollection}
+                    setIsModalOpen={setIsModalOpen}
+                    selectedUser={selectedUser}
+                    usersCollection={usersCollection}
                 />
             )}
 
         
             {inputSearch ? (
                 <SearchResultsUsers
-                searchResults={searchResults}
-                setIsModalOpen={setIsModalOpen}
-                setSelectedUser={setSelectedUser}
+                    searchResults={searchResults}
+                    setIsModalOpen={setIsModalOpen}
+                    setSelectedUser={setSelectedUser}
                 />
             ) : (
-                <Chats usersCollection={usersCollection} />
+                <Chats 
+                    usersCollection={usersCollection} 
+                    currentUser={currentUser}
+                />
             )}
         </div>
     );

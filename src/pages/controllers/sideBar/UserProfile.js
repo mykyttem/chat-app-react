@@ -37,18 +37,18 @@ const CheckProfileUser = ({ selectedUser, setIsModalOpen }) => {
             const own_uid = user.uid;
 
             // Reference to the document in the 'chats' collection with the UID of the currently authenticated user.
-            const chatsDocRef = doc(db, 'chats', own_uid);
+            const chatsDocRef = doc(db, 'own-chats', own_uid);
 
             // Document data to be updated or added to the 'chats' collection.
             const docChat = {
-                [`companion_${name}`]: select_user_uid,
+                [select_user_uid]: select_user_uid,
             };
 
             // Update the document in the 'chats' collection, merging existing data if the document already exists.
             await setDoc(chatsDocRef, docChat, { merge: true });
         } catch (error) {
             console.error("Error updating document: ", error.message);
-        }
+        } 
     };
 
     // Render the user profile modal
