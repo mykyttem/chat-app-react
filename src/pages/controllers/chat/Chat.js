@@ -12,7 +12,6 @@ import img from "../../../assets/icons/img.svg";
 
 const Chat = ({ currentUser }) => {
     const { chatId } = useParams();
-
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [img_send, setImg] = useState(null);
@@ -22,90 +21,69 @@ const Chat = ({ currentUser }) => {
         if (chatId) {
             const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
                 if (doc.exists()) {
-                    setMessages(doc.data().messages);
+                    // sort messages by date in descending order
+                    const sortedMessages = doc.data().messages.sort((a, b) => b.date - a.date);
+                    setMessages(sortedMessages);
                 }
             });
-    
-    
+
             return () => {
                 unSub();
             };
         }
-    }, [chatId]);  
-    
-    
+    }, [chatId]);
+
+
     const handleSend = async () => {
         if (chatId) {
             if (img_send) {
-    
+                // handle send img
             } else {
-                setMessages((prevMessages) => [
-                    {
-                        id: uuid(),
-                        text,
-                        senderId: currentUser.uid,
-                        date: Timestamp.now(),
-                    },
-                    ...prevMessages,
-                ]);
-                
+                const newMessage = {
+                    id: uuid(),
+                    text,
+                    senderId: currentUser.uid,
+                    date: Timestamp.now(),
+                };
+
+                setMessages((prevMessages) => [newMessage, ...prevMessages]);
+
                 await updateDoc(doc(db, "chats", chatId), {
-                    messages: arrayUnion({
-                        id: uuid(),
-                        text,
-                        senderId: currentUser.uid,
-                        date: Timestamp.now()
-                    })
+                    messages: arrayUnion(newMessage),
                 });
             }
         }
     };
 
-    
-
     return (
         <div className="chat">
             <div className="messages">
-                {messages.map((m) => (
-                    m.senderId === currentUser.uid ? (
-                        <div key={m.id} className="bubble-own-message">
-                            <h2 className="text-own-message">{m.text}</h2>
-                        </div>
-                    ) : (
-                        <div key={m.id} className="bubble-companion-message">
-                            <h2 className="text-companion-message">{m.text}</h2>
-                        </div>
-                    )
+                {messages.slice().reverse().map((m) => (
+                    <div key={m.date} className={m.senderId === currentUser.uid ? "bubble-own-message" : "bubble-companion-message"}>
+                        <h2 className={m.senderId === currentUser.uid ? "text-own-message" : "text-companion-message"}>{m.text}</h2>
+                    </div>
                 ))}
             </div>
 
-
             <div className="block-input">
-                <input className="field-input" type="text" placeholder="Type something..." onChange={e => setText(e.target.value)} />
-
-                <img
-                    src={clip}
-                    className="clip"
-                    alt="clip"
+                <input
+                    className="field-input"
+                    type="text"
+                    placeholder="Type something..."
+                    onChange={(e) => setText(e.target.value)}
                 />
 
-                <img
-                    src={img}
-                    className="img"
-                    alt="img"
-                />
+                <img src={clip} className="clip" alt="clip" />
+
+                <img src={img} className="img" alt="img" />
 
                 <div className="box-send" onClick={handleSend}>
-                    <img
-                        src={send}
-                        className="send"
-                        alt="send"
-                    />
+                    <img src={send} className="send" alt="send" />
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 
 export default Chat;
