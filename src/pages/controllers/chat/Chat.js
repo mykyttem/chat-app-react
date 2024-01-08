@@ -55,12 +55,32 @@ const Chat = ({ currentUser }) => {
         }
     };
 
+    const formatTimestamp = (timestamp) => {
+        const dateObject = timestamp.toDate();
+        return dateObject.toLocaleString(); 
+    };
+
     return (
         <div className="chat">
             <div className="messages">
                 {messages.slice().reverse().map((m) => (
-                    <div key={m.date} className={m.senderId === currentUser.uid ? "bubble-own-message" : "bubble-companion-message"}>
-                        <h2 className={m.senderId === currentUser.uid ? "text-own-message" : "text-companion-message"}>{m.text}</h2>
+                    <div key={m.date} 
+                        className={m.senderId === currentUser.uid 
+                        ? "bubble-own-message" 
+                        : "bubble-companion-message"}
+                    >
+                        <h2 className={m.senderId === currentUser.uid 
+                            ? "text-own-message" 
+                            : "text-companion-message"}>
+                                {m.text}
+                        </h2>
+                        <h2 style={{ fontSize: "15px", color: "gray" }} 
+                            className={m.senderId === currentUser.uid 
+                            ? "text-own-message" 
+                            : "text-companion-message"}
+                        >
+                            {formatTimestamp(m.date)}
+                        </h2>
                     </div>
                 ))}
             </div>
