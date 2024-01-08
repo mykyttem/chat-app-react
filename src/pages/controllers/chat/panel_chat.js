@@ -1,4 +1,5 @@
 import React from "react";
+import { useParams } from "react-router-dom";
 
 // icons svg
 import computer_webcam_video from "../../../assets/icons/computer_webcam_video.svg";
@@ -10,6 +11,9 @@ import avatar_companion from "../../../assets/companion.png";
 
 
 const PanelChat = () => {
+    const { name } = useParams();
+
+
     return (
         <div className="panelChat">
             <img 
@@ -19,7 +23,7 @@ const PanelChat = () => {
             />
 
             <h2 className="name-companion">
-                Name    
+                {name}   
             </h2>        
 
         

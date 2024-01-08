@@ -1,10 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 
 // firebase
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../firebase';
-
 
 // styles
 import './styles/home.scss';
@@ -22,7 +20,6 @@ import './styles/chat/chat.scss';
 import SideBar from './controllers/sideBar/SideBar';
 import Chat from './controllers/chat/Chat';
 import Profile from './controllers/profile/Profile';
-import PanelChat from './controllers/chat/panel_chat';
 
 
 const LoadedHome = () => {
@@ -50,7 +47,6 @@ const LoadedHome = () => {
                 <div className="home-container">
                     <SideBar currentUser={user} />
                     <Profile user={user} />
-                    <PanelChat />
                     <Chat currentUser={user} />
                 </div>
             ) : (

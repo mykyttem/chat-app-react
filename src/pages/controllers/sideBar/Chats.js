@@ -84,7 +84,7 @@ const Chats = ({ usersCollection, currentUser }) => {
                 await setDoc(doc(db, "chats", combinedId), { messages: [] });
             }
 
-            navigate(`/chat/${combinedId}`);
+            navigate(`/chat/${combinedId}/${user.name}`);
         } catch (error) {
             console.error(error);
         }
