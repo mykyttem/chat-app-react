@@ -2,18 +2,35 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
+// firebase
 import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { db } from "../../../firebase";
 
+// animation
+import Animated from "./animation";
+
+// icons
 import send from "../../../assets/icons/send.svg";
 import clip from "../../../assets/icons/clip.svg";
 import img from "../../../assets/icons/img.svg";
 
+// component
 import PanelChat from "./panel_chat";
 
 
+/**
+ * @function Chat
+ * @description Represents a chat component with real-time message updates.
+ * @param {Object} props - Component properties.
+ * @param {Object} props.currentUser - Current user information.
+*/
+
+
 const Chat = ({ currentUser }) => {
+    // Retrieve chatId from URL parameters
     const { chatId } = useParams();
+
+    // State variables for managing messages, text input, and image attachment
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [img_send, setImg] = useState(null);
@@ -39,7 +56,7 @@ const Chat = ({ currentUser }) => {
     const handleSend = async () => {
         if (chatId) {
             if (img_send) {
-                // handle send img
+                // TODO: handle send img
             } else {
                 const newMessage = {
                     id: uuid(),
@@ -47,9 +64,11 @@ const Chat = ({ currentUser }) => {
                     senderId: currentUser.uid,
                     date: Timestamp.now(),
                 };
-
+                
+                // Update state to include the new message
                 setMessages((prevMessages) => [newMessage, ...prevMessages]);
 
+                // Update the 'messages' field in the chat document with the new message
                 await updateDoc(doc(db, "chats", chatId), {
                     messages: arrayUnion(newMessage),
                 });
@@ -68,26 +87,28 @@ const Chat = ({ currentUser }) => {
 
             <div className="chat">
                 <div className="messages">
-                    {messages.slice().reverse().map((m) => (
-                        <div key={m.date} 
-                            className={m.senderId === currentUser.uid 
-                            ? "bubble-own-message" 
-                            : "bubble-companion-message"}
-                        >
-                            <h2 className={m.senderId === currentUser.uid 
-                                ? "text-own-message" 
-                                : "text-companion-message"}>
-                                    {m.text}
-                            </h2>
-                            <h2 style={{ fontSize: "15px", color: "gray" }} 
-                                className={m.senderId === currentUser.uid 
-                                ? "text-own-message" 
-                                : "text-companion-message"}
-                            >
-                                {formatTimestamp(m.date)}
-                            </h2>
-                        </div>
-                    ))}
+                        {messages.slice().reverse().map((m) => (
+                            <Animated>
+                                <div key={m.date} 
+                                    className={m.senderId === currentUser.uid 
+                                    ? "bubble-own-message" 
+                                    : "bubble-companion-message"}
+                                >
+                                    <h2 className={m.senderId === currentUser.uid 
+                                        ? "text-own-message" 
+                                        : "text-companion-message"}>
+                                            {m.text}
+                                    </h2>
+                                    <h2 style={{ fontSize: "15px", color: "gray" }} 
+                                        className={m.senderId === currentUser.uid 
+                                        ? "text-own-message" 
+                                        : "text-companion-message"}
+                                    >
+                                        {formatTimestamp(m.date)}
+                                    </h2>
+                                </div>
+                            </Animated>
+                        ))}
                 </div>
 
                 <div className="block-input">
