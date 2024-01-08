@@ -1,11 +1,13 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { query, where, getDocs } from "firebase/firestore";
 import search from "../../../assets/icons/search.svg";
+
 
 /**
  * SearchUsers component allows users to search for other users based on name, email, or phone number.
  * It provides a search input field, a dropdown to select search criteria, and triggers a search based on user input.
  *
+ * @component
  * @param {string} inputSearch - The user's input for the search query.
  * @param {function} setInputSearch - Function to update the search input state.
  * @param {function} setSearchResults - Function to update the search results state.
@@ -16,21 +18,26 @@ import search from "../../../assets/icons/search.svg";
 const SearchUsers = ({ inputSearch, setInputSearch, setSearchResults, usersCollection }) => {
     // State to track the selected search field (name, email, phoneNumber)
     const [searchField, setSearchField] = useState('name');
+    const minInputLength = 1;
 
     /**
      * Handles the search process based on the selected search field and user input.
+     *
+     * @async
+     * @param {string} searchInput - The user's input for the search query.
     */
-    const handleSearch = useCallback(async () => {
+
+    const handleSearch = useCallback(async (searchInput) => {
         try {
             let q;
 
             // Construct query based on the selected search field
             if (searchField === 'name') {
-                q = query(usersCollection, where('name', '==', inputSearch));
+                q = query(usersCollection, where('name', '==', searchInput));
             } else if (searchField === 'email') {
-                q = query(usersCollection, where('email', '==', inputSearch));
+                q = query(usersCollection, where('email', '==', searchInput));
             } else if (searchField === 'phoneNumber') {
-                q = query(usersCollection, where('phoneNumber', '==', inputSearch));
+                q = query(usersCollection, where('phoneNumber', '==', searchInput));
             }
 
             // Execute the query and update search results
@@ -43,34 +50,28 @@ const SearchUsers = ({ inputSearch, setInputSearch, setSearchResults, usersColle
             setSearchResults([]);
             console.error('Error fetching user data:', error.message);
         }
-    }, [inputSearch, searchField, setSearchResults, usersCollection]);
+    }, [searchField, setSearchResults, usersCollection]);
 
-    /**
-     * Handles changes in the search input.
-     * Updates the inputSearch state based on user input.
-    */
+
     const handleInputChange = (e) => {
-        setInputSearch(e.target.value);
-    };
+        const newInputSearch = e.target.value;
+        setInputSearch(newInputSearch);
 
-    /**
-     * Handles changes in the selected search field.
-     * Updates the searchField state based on user selection.
-    */
-    const handleSelectChange = (e) => {
-        setSearchField(e.target.value);
-    };
-
-    /**
-     * Effect to trigger the search when input or search field changes.
-    */
-    useEffect(() => {
-        if (inputSearch) {
-            handleSearch();
+        // Call handleSearch only if enough characters are entered
+        if (newInputSearch.length >= minInputLength) {
+            handleSearch(newInputSearch);
+        } else {
+            setSearchResults([]);
         }
-    }, [inputSearch, handleSearch]);
+    };
 
-    // Render the search input and dropdown
+
+    const handleSelectChange = (e) => {
+        const newSearchField = e.target.value;
+        setSearchField(newSearchField);
+    };
+
+
     return (
         <div className="block-search">
             <div className="field-search-user">

@@ -55,6 +55,7 @@ const SideBar = ({ currentUser }) => {
                     setIsModalOpen={setIsModalOpen}
                     selectedUser={selectedUser}
                     usersCollection={usersCollection}
+                    currentUser={currentUser}
                 />
             )}
 

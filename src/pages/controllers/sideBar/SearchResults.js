@@ -14,8 +14,6 @@ const SearchResultsUsers = ({ searchResults, setIsModalOpen, setSelectedUser }) 
 
     /**
      * Handles opening the user profile modal when a user is clicked.
-     *
-     * @param {Object} selectedUser - The selected user for whom the profile is displayed.
     */
 
 
@@ -49,6 +47,11 @@ const SearchResultsUsers = ({ searchResults, setIsModalOpen, setSelectedUser }) 
                     </h2>
                 </div>
             ))}
+           
+
+            {searchResults.length === 0 && (
+                <h1 className="no-results-found">No results found</h1>
+            )}
         </div>
     );
 };

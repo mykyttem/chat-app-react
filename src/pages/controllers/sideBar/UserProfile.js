@@ -1,6 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from "../../../firebase";
+import { db } from "../../../firebase";
 
 
 /**
@@ -12,40 +11,30 @@ import { auth, db } from "../../../firebase";
 */
 
 
-const CheckProfileUser = ({ selectedUser, setIsModalOpen }) => {
-
+const CheckProfileUser = ({ selectedUser, setIsModalOpen, currentUser }) => {
     /**
      * Handles the process of adding a user to the contacts in the 'chats' collection.
     */
+    
+    const OwnChats_collection = "own-chats";
+    const own_uid = currentUser.uid;
 
 
-    const handleAddUser = async (select_user_uid, name) => {
+    const handleAddUser = async (select_user_uid) => {
         try {
-            // Wait for the user to be authenticated using onAuthStateChanged.
-            const user = await new Promise((resolve, reject) => {
-                const unsubscribe = onAuthStateChanged(auth, (user) => {
-                    unsubscribe();
-                    if (user) {
-                        resolve(user);
-                    } else {
-                        reject(new Error("User not authenticated"));
-                    }
-                });
-            });
+            // doc ref
+            const currentUserDocRef = doc(db, OwnChats_collection, own_uid);
+            const selectedUserDocRef = doc(db, OwnChats_collection, select_user_uid);
+            
+            // data 
+            const currentUserData = { [select_user_uid]: select_user_uid };
+            const selectedUserData = { [own_uid]: own_uid };
+            
+            // Save 
+            await setDoc(currentUserDocRef, currentUserData, { merge: true });
+            await setDoc(selectedUserDocRef, selectedUserData, { merge: true });
 
-            // Obtain the UID of the currently authenticated user.
-            const own_uid = user.uid;
-
-            // Reference to the document in the 'chats' collection with the UID of the currently authenticated user.
-            const chatsDocRef = doc(db, 'own-chats', own_uid);
-
-            // Document data to be updated or added to the 'chats' collection.
-            const docChat = {
-                [select_user_uid]: select_user_uid,
-            };
-
-            // Update the document in the 'chats' collection, merging existing data if the document already exists.
-            await setDoc(chatsDocRef, docChat, { merge: true });
+            setIsModalOpen(false);
         } catch (error) {
             console.error("Error updating document: ", error.message);
         } 
@@ -61,9 +50,10 @@ const CheckProfileUser = ({ selectedUser, setIsModalOpen }) => {
                     <p>Email: {selectedUser.email}</p>
                     <p>Phone Number: {selectedUser?.phoneNumber}</p>
 
-                    <button onClick={() => handleAddUser(selectedUser.uid, selectedUser.name)}>
+                    <button onClick={() => handleAddUser(selectedUser.uid)}>
                         Add in contacts
                     </button>
+
 
                     <button className="close-button" onClick={() => setIsModalOpen(false)}>
                         Close
