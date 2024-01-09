@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
@@ -35,6 +35,8 @@ const Chat = ({ currentUser }) => {
     const [text, setText] = useState("");
     const [img_send, setImg] = useState(null);
 
+    const messagesRef = useRef();
+
 
     useEffect(() => {
         if (chatId) {
@@ -51,6 +53,15 @@ const Chat = ({ currentUser }) => {
             };
         }
     }, [chatId]);
+
+    // scroll last message
+    useEffect(() => {
+        const lastMessage = document.querySelector('.messages > div:last-child');
+
+        if (lastMessage) {
+            lastMessage.scrollIntoView({ behavior: 'smooth' });
+        }
+    }, [messages]);
 
 
     const handleSend = async () => {
@@ -72,6 +83,8 @@ const Chat = ({ currentUser }) => {
                 await updateDoc(doc(db, "chats", chatId), {
                     messages: arrayUnion(newMessage),
                 });
+
+                setText("");
             }
         }
     };
@@ -86,7 +99,7 @@ const Chat = ({ currentUser }) => {
             <PanelChat />
 
             <div className="chat">
-                <div className="messages">
+                <div className="messages" ref={messagesRef}>
                         {messages.slice().reverse().map((m) => (
                             <Animated>
                                 <div key={m.date} 
@@ -117,6 +130,7 @@ const Chat = ({ currentUser }) => {
                         type="text"
                         placeholder="Type something..."
                         onChange={(e) => setText(e.target.value)}
+                        value={text}
                     />
 
                     <img src={clip} className="clip" alt="clip" />
