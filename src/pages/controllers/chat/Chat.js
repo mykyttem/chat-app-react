@@ -14,7 +14,7 @@ import send from "../../../assets/icons/send.svg";
 import clip from "../../../assets/icons/clip.svg";
 import img from "../../../assets/icons/img.svg";
 
-// component
+// components
 import PanelChat from "./panel_chat";
 
 
@@ -96,52 +96,69 @@ const Chat = ({ currentUser }) => {
 
     return (
         <>
-            <PanelChat />
-
-            <div className="chat">
-                <div className="messages" ref={messagesRef}>
-                        {messages.slice().reverse().map((m) => (
-                            <Animated>
-                                <div key={m.date} 
-                                    className={m.senderId === currentUser.uid 
-                                    ? "bubble-own-message" 
-                                    : "bubble-companion-message"}
-                                >
-                                    <h2 className={m.senderId === currentUser.uid 
-                                        ? "text-own-message" 
-                                        : "text-companion-message"}>
-                                            {m.text}
-                                    </h2>
-                                    <h2 style={{ fontSize: "15px", color: "gray" }} 
-                                        className={m.senderId === currentUser.uid 
-                                        ? "text-own-message" 
-                                        : "text-companion-message"}
+            {chatId ? (
+                <>
+                    <PanelChat />
+    
+                    <div className="chat">
+                        <div className="messages" ref={messagesRef}>
+                            {messages.slice().reverse().map((m) => (
+                                <Animated key={m.date}>
+                                    <div
+                                        className={
+                                            m.senderId === currentUser.uid
+                                                ? "bubble-own-message"
+                                                : "bubble-companion-message"
+                                        }
                                     >
-                                        {formatTimestamp(m.date)}
-                                    </h2>
-                                </div>
-                            </Animated>
-                        ))}
-                </div>
-
-                <div className="block-input">
-                    <input
-                        className="field-input"
-                        type="text"
-                        placeholder="Type something..."
-                        onChange={(e) => setText(e.target.value)}
-                        value={text}
-                    />
-
-                    <img src={clip} className="clip" alt="clip" />
-
-                    <img src={img} className="img" alt="img" />
-
-                    <div className="box-send" onClick={handleSend}>
-                        <img src={send} className="send" alt="send" />
+                                        <h2
+                                            className={
+                                                m.senderId === currentUser.uid
+                                                    ? "text-own-message"
+                                                    : "text-companion-message"
+                                            }
+                                        >
+                                            {m.text}
+                                        </h2>
+                                        <h2
+                                            style={{ fontSize: "15px", color: "gray" }}
+                                            className={
+                                                m.senderId === currentUser.uid
+                                                    ? "text-own-message"
+                                                    : "text-companion-message"
+                                            }
+                                        >
+                                            {formatTimestamp(m.date)}
+                                        </h2>
+                                    </div>
+                                </Animated>
+                            ))}
+                        </div>
+    
+                        <div className="block-input">
+                            <input
+                                className="field-input"
+                                type="text"
+                                placeholder="Type something..."
+                                onChange={(e) => setText(e.target.value)}
+                                value={text}
+                            />
+    
+                            <img src={clip} className="clip" alt="clip" />
+    
+                            <img src={img} className="img" alt="img" />
+    
+                            <div className="box-send" onClick={handleSend}>
+                                <img src={send} className="send" alt="send" />
+                            </div>
+                        </div>
                     </div>
+                </>
+            ) : (
+                <div className="chat">
+                    <h2 className="select-chat">Select chat or find user</h2>
                 </div>
-            </div>
+            )}
         </>
     );
 };
