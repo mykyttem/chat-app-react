@@ -5,14 +5,15 @@ import { useParams } from "react-router-dom";
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "../../../firebase";
 
+// animation
+import { Animated_menu } from "./animation";
+
 // icons
 import computer_webcam_video from "../../../assets/icons/computer_webcam_video.svg";
 import phone from "../../../assets/icons/phone.svg";
 import menu_chat from "../../../assets/icons/menu_chat.svg";
 
 import avatar_companion from "../../../assets/companion.png";
-
-
 
 
 const PanelChat = () => {
@@ -63,10 +64,13 @@ const PanelChat = () => {
                 <img src={phone} className="icon-phone" alt="phone" />
                 <img src={menu_chat} className="icon-menu" alt="menu" onClick={toggleMenu} />
 
+                    
                 {isMenuOpen && (
-                    <div className="menu">
-                        <p onClick={handle_ClearHistory}>Clear history</p>
-                    </div>
+                    <Animated_menu>
+                            <div className="menu">
+                                <p onClick={handle_ClearHistory}>Clear history</p>
+                            </div>
+                    </Animated_menu>
                 )}
 
                 {showConfirmationDialog && (

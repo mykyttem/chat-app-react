@@ -7,7 +7,8 @@ import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp } from "firebase/fire
 import { db } from "../../../firebase";
 
 // animation
-import Animated from "./animation";
+import { Animated_message } from "./animation";
+
 
 // icons
 import send from "../../../assets/icons/send.svg";
@@ -103,7 +104,7 @@ const Chat = ({ currentUser }) => {
                     <div className="chat">
                         <div className="messages" ref={messagesRef}>
                             {messages.slice().reverse().map((m) => (
-                                <Animated key={m.date}>
+                                <Animated_message key={m.date}>
                                     <div
                                         className={
                                             m.senderId === currentUser.uid
@@ -131,7 +132,7 @@ const Chat = ({ currentUser }) => {
                                             {formatTimestamp(m.date)}
                                         </h2>
                                     </div>
-                                </Animated>
+                                </Animated_message>
                             ))}
                         </div>
     
