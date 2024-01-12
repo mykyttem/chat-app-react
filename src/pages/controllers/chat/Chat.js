@@ -7,7 +7,7 @@ import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp } from "firebase/fire
 import { db } from "../../../firebase";
 
 // animation
-import { Animated_message } from "./animation";
+import { Animated_chat, Animated_message } from "./animation";
 
 
 // icons
@@ -94,66 +94,69 @@ const Chat = ({ currentUser }) => {
         const dateObject = timestamp.toDate();
         return dateObject.toLocaleString(); 
     };
+    
 
     return (
         <>
             {chatId ? (
                 <>
-                    <PanelChat />
-    
-                    <div className="chat">
-                        <div className="messages" ref={messagesRef}>
-                            {messages.slice().reverse().map((m) => (
-                                <Animated_message key={m.date}>
-                                    <div
-                                        className={
-                                            m.senderId === currentUser.uid
-                                                ? "bubble-own-message"
-                                                : "bubble-companion-message"
-                                        }
-                                    >
-                                        <h2
+                    <Animated_chat>
+                        <PanelChat />
+
+                        <div className="chat">
+                            <div className="messages" ref={messagesRef}>
+                                {messages.slice().reverse().map((m) => (
+                                    <Animated_message key={m.date}>
+                                        <div
                                             className={
                                                 m.senderId === currentUser.uid
-                                                    ? "text-own-message"
-                                                    : "text-companion-message"
+                                                    ? "bubble-own-message"
+                                                    : "bubble-companion-message"
                                             }
                                         >
-                                            {m.text}
-                                        </h2>
-                                        <h2
-                                            style={{ fontSize: "15px", color: "gray" }}
-                                            className={
-                                                m.senderId === currentUser.uid
-                                                    ? "text-own-message"
-                                                    : "text-companion-message"
-                                            }
-                                        >
-                                            {formatTimestamp(m.date)}
-                                        </h2>
-                                    </div>
-                                </Animated_message>
-                            ))}
-                        </div>
-    
-                        <div className="block-input">
-                            <input
-                                className="field-input"
-                                type="text"
-                                placeholder="Type something..."
-                                onChange={(e) => setText(e.target.value)}
-                                value={text}
-                            />
-    
-                            <img src={clip} className="clip" alt="clip" />
-    
-                            <img src={img} className="img" alt="img" />
-    
-                            <div className="box-send" onClick={handleSend}>
-                                <img src={send} className="send" alt="send" />
+                                            <h2
+                                                className={
+                                                    m.senderId === currentUser.uid
+                                                        ? "text-own-message"
+                                                        : "text-companion-message"
+                                                }
+                                            >
+                                                {m.text}
+                                            </h2>
+                                            <h2
+                                                style={{ fontSize: "15px", color: "gray" }}
+                                                className={
+                                                    m.senderId === currentUser.uid
+                                                        ? "text-own-message"
+                                                        : "text-companion-message"
+                                                }
+                                            >
+                                                {formatTimestamp(m.date)}
+                                            </h2>
+                                        </div>
+                                    </Animated_message>
+                                ))}
+                            </div>
+        
+                            <div className="block-input">
+                                <input
+                                    className="field-input"
+                                    type="text"
+                                    placeholder="Type something..."
+                                    onChange={(e) => setText(e.target.value)}
+                                    value={text}
+                                />
+        
+                                <img src={clip} className="clip" alt="clip" />
+        
+                                <img src={img} className="img" alt="img" />
+        
+                                <div className="box-send" onClick={handleSend}>
+                                    <img src={send} className="send" alt="send" />
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </Animated_chat>
                 </>
             ) : (
                 <div className="chat">
