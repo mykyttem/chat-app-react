@@ -45,7 +45,7 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
 
     // scroll last message
     useEffect(() => {
-        const lastMessage = document.querySelector('.messages > div:last-child');
+        const lastMessage = document.querySelector('.messages > div:last-child');   
 
         if (lastMessage) {
             lastMessage.scrollIntoView({ behavior: 'smooth' });
@@ -111,44 +111,45 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
             <div className="messages" ref={messagesRef}>
                 {messages.slice().reverse().map((m) => (
                     <AnimatedMessage key={m.date}>
-                        <div
-                            className={
-                                m.senderId === currentUser.uid
-                                    ? "bubble-own-message"
-                                    : "bubble-companion-message"
-                                }
-                                onContextMenu={(e) => handle_ContextMenu(e, m)}
+                        <div className={
+                            m.senderId === currentUser.uid
+                            ? "bubble-own-message"
+                            : "bubble-companion-message"
+                        }
+                        onContextMenu={(e) => handle_ContextMenu(e, m)}
                         >
-                            <h2
-                                className={
+
+                        {m.imageUrl ? (
+                            <img src={m.imageUrl} alt="messageImage" style={{width: 250}}/>
+                        ) : (
+                            <>
+                                <h2 className={
                                     m.senderId === currentUser.uid
                                         ? "text-own-message"
                                         : "text-companion-message"
-                                }
-                            >
-                                {m.text}
-                            </h2>
-                            <h2
-                                style={{ fontSize: "15px", color: "gray" }}
-                                className={
-                                    m.senderId === currentUser.uid
+                                    }
+                                >
+                                    {m.text}
+                                </h2>
+                                <h2 className={
+                                        m.senderId === currentUser.uid
                                         ? "text-own-message"
                                         : "text-companion-message"
-                                }
-                            >
-                                {formatTimestamp(m.date)}
+                                    }
+                                    style={{ fontSize: "15px", color: "gray" }}
+                                >
+                                    {formatTimestamp(m.date)}
                             </h2>
+                            </>
+                        )}
                         </div>
                     </AnimatedMessage>
                 ))}
             </div>
-
+        
             {isMenuOpen && (
-                <div className="menu" 
-                    style={{ top: menuPosition.top, left: menuPosition.left }} 
-                >
-
-                    <p onClick={handle_deleteMessage}>Delete message</p>
+                <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
+                <p onClick={handle_deleteMessage}>Delete message</p>
                 </div>
             )}
         </>
