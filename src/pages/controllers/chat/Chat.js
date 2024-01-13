@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 
 // firebase
-import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
+import { onSnapshot, doc, updateDoc, arrayUnion, Timestamp, arrayRemove } from "firebase/firestore";
 import { db } from "../../../firebase";
 
 // animation
@@ -32,16 +32,22 @@ const Chat = ({ currentUser }) => {
     const { chatId } = useParams();
 
     // State variables for managing messages, text input, and image attachment
+    const chatssDoc = doc(db, "chats", chatId)
+
     const [messages, setMessages] = useState([]);
     const [text, setText] = useState("");
     const [img_send, setImg] = useState(null);
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+    const [selectedMessage, setSelectedMessage] = useState(null);
 
     const messagesRef = useRef();
 
 
     useEffect(() => {
         if (chatId) {
-            const unSub = onSnapshot(doc(db, "chats", chatId), (doc) => {
+            const unSub = onSnapshot(chatssDoc, (doc) => {
                 if (doc.exists()) {
                     // sort messages by date in descending order
                     const sortedMessages = doc.data().messages.sort((a, b) => b.date - a.date);
@@ -95,10 +101,56 @@ const Chat = ({ currentUser }) => {
         return dateObject.toLocaleString(); 
     };
     
+    // close the menu if the user clicks elsewhere
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (isMenuOpen && !e.target.closest('.menu')) {
+                setIsMenuOpen(false);
+            }
+        };
 
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isMenuOpen]);
+
+    
+    const handle_ContextMenu = (e, message) => {
+        e.preventDefault();
+        
+        // click own message
+        if (message.senderId === currentUser.uid) {
+            const containerRect = messagesRef.current.getBoundingClientRect();
+    
+            setMenuPosition({
+                top: e.clientY - containerRect.top,
+                left: e.clientX - containerRect.left,
+            });
+
+            // set selected message id
+            setSelectedMessage(message.id);
+            
+            // open
+            setIsMenuOpen(true);
+        }
+    };
+    
+    const handle_deleteMessage = async () => {
+        // Remove the selected message from the 'messages' array
+        await updateDoc(chatssDoc, {
+            messages: arrayRemove(messages.find(m => m.id === selectedMessage)),
+        });
+
+        // Clear the selectedMessage to reset for the next interaction
+        setSelectedMessage(null);
+        setIsMenuOpen(false); 
+    };
+    
     return (
         <>
-            {chatId ? (
+            {chatId ? ( 
                 <>
                     <Animated_chat>
                         <PanelChat />
@@ -112,7 +164,8 @@ const Chat = ({ currentUser }) => {
                                                 m.senderId === currentUser.uid
                                                     ? "bubble-own-message"
                                                     : "bubble-companion-message"
-                                            }
+                                                }
+                                                onContextMenu={(e) => handle_ContextMenu(e, m)}
                                         >
                                             <h2
                                                 className={
@@ -137,7 +190,16 @@ const Chat = ({ currentUser }) => {
                                     </Animated_message>
                                 ))}
                             </div>
-        
+
+                            {isMenuOpen && (
+                                <div className="menu" 
+                                    style={{ top: menuPosition.top, left: menuPosition.left }} 
+                                >
+
+                                    <p onClick={handle_deleteMessage}>Delete message</p>
+                                </div>
+                            )}
+                
                             <div className="block-input">
                                 <input
                                     className="field-input"
