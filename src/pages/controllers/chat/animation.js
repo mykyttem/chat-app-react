@@ -31,7 +31,7 @@ const Animated_chat = ({ children }) => {
 };
 
 
-const Animated_message = ({ children }) => {
+const AnimatedMessage = ({ children }) => {
     return (
         <motion.div
             variants={animation_message} 
@@ -59,4 +59,4 @@ const Animated_menu = ({ children }) => {
 };
 
 
-export { Animated_chat, Animated_message, Animated_menu };
+export { Animated_chat, AnimatedMessage, Animated_menu };
