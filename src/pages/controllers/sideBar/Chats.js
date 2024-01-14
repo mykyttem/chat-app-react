@@ -8,13 +8,11 @@ import { auth, db } from "../../../firebase";
 import avatar_companion from "../../../assets/companion.png";
 
 
-
 /**
  * Chats component displays a list of chats with user avatars, names, and sample messages.
  *
  * @param {Object} usersCollection - Reference to the Firestore collection containing user data.
 */
-
 
 
 const Chats = ({ usersCollection, currentUser }) => {
@@ -26,41 +24,44 @@ const Chats = ({ usersCollection, currentUser }) => {
     /**
      * Fetches user data for the chats based on the authenticated user's UID.
     */
-
     const getChats = useCallback(async () => {
-
-        // Get chats
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userUid = user.uid;
-
-                // Get data users from the 'chats' collection
                 const userDocRef = doc(db, 'own-chats', userUid);
                 const userDocSnapshot = await getDoc(userDocRef);
 
                 if (userDocSnapshot.exists()) {
                     const chatsUser = userDocSnapshot.data();
-
-                    // Extract all values from the chatsUser object
                     const uid_users = Object.values(chatsUser);
 
-                    const users = await Promise.all(uid_users.map(async (uid) => {
-                        // Query user data from the users collection
-                        const q = query(usersCollection, where('uid', '==', uid));
-                        const querySnapshot = await getDocs(q);
-                        const users = querySnapshot.docs.map(doc => doc.data());
+                    const chatsWithLastMessage = await Promise.all(
+                        uid_users.map(async (uid) => {
+                            const q = query(usersCollection, where('uid', '==', uid));
+                            const querySnapshot = await getDocs(q);
+                            const userData = querySnapshot.docs.map(doc => doc.data())[0]; // assuming one user per UID
 
-                        return users;
-                    }));
+                            // Fetch last message from the chat
+                            const chatId = currentUser.uid > userData.uid
+                                ? currentUser.uid + userData.uid
+                                : userData.uid + currentUser.uid;
 
-                    setChats(users);
+                            const chatDocRef = doc(db, 'chats', chatId);
+                            const chatDocSnapshot = await getDoc(chatDocRef);
+                            const messages = chatDocSnapshot.exists() ? chatDocSnapshot.data().messages : [];
+                            const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+
+                            return { ...userData, lastMessage };
+                        })
+                    );
+
+                    setChats(chatsWithLastMessage);
                 }
             }
         });
 
-        // Cleanup function to unsubscribe from the auth state changes when the component unmounts
         return () => unsubscribe();
-    }, [usersCollection, setChats]);
+    }, [usersCollection, setChats, currentUser.uid]);
 
 
     // Fetch chats on component mount
@@ -94,18 +95,15 @@ const Chats = ({ usersCollection, currentUser }) => {
     // Render the list of chats
     return (
         <ul className="chats">  
-            {chats.flat().map((user, index) => (
-                <li key={index} className="side-chat" onClick={() => handleSelect({ user: user })}>
-                    
+            {chats.map((user, index) => (
+                <li key={index} className="side-chat" onClick={() => handleSelect({ user })}>
                     <img
                         src={avatar_companion}
                         className="chat-companion-avatar"
                         alt="chat-companion-avatar"
                     />
-       
                     <h2 className="chat-name-companion">{user.name}</h2>
-                    <h2 className="chat-message">message</h2>
-                
+                    <h2 className="chat-message">{user.lastMessage ? user.lastMessage.text : 'No messages yet'}</h2>
                     <div className="line"></div>
                 </li>
             ))}
