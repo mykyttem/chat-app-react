@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import "../../styles/profile/settings.scss";
 
@@ -6,6 +6,8 @@ import "../../styles/profile/settings.scss";
 import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut, updatePhoneNumber } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
 import { storage, auth } from "../../../firebase";
+
+import { fetchPhotoURL } from "./getPhoto";
 
 // files
 import default_avatar from "../../../assets/defaultAvatar_profile.png";
@@ -22,6 +24,7 @@ const Settings = ({ user, setModalWindow }) => {
 
     // current data user
     const { displayName, email, phoneNumber, photoURL, uid } = user;
+    const [photo, setPhoto] = useState(null);
     
 
     // values for new data user
@@ -45,6 +48,23 @@ const Settings = ({ user, setModalWindow }) => {
     const cancel_CloseModal = () => {
         setModalWindow(false);
     };
+
+    /*
+     * Effect Hook to fetch the user's photo URL from Firebase
+     * and update the state accordingly.
+    */
+    useEffect(() => {
+        const fetchUserPhotoURL = async () => {
+            try {
+                const url = await fetchPhotoURL(photoURL);
+                setPhoto(url);
+            } catch (error) {
+                console.error("Error fetching photo:", error);
+            }
+        };
+
+        fetchUserPhotoURL();
+    });
 
 
     const handleImageChange = (e) => {
@@ -234,7 +254,7 @@ const Settings = ({ user, setModalWindow }) => {
                     />
                     ) : (
                     <img 
-                        src={photoURL || default_avatar} 
+                        src={photo || default_avatar} 
                         className="current-photo" 
                         alt="default avatar" 
                     />
