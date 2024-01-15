@@ -24,6 +24,8 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
+    const [isNewMessage, setIsNewMessage] = useState(false);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
     const messagesRef = useRef();
 
 
@@ -34,6 +36,10 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
                     // sort messages by date in descending order
                     const sortedMessages = doc.data().messages.sort((a, b) => b.date - a.date);
                     setMessages(sortedMessages);
+
+                    if (isScrolledToBottom) {
+                        setIsNewMessage(true);
+                    }
                 }
             });
 
@@ -41,17 +47,24 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
                 unSub();
             };
         }
-    }, [chatId, chatsDoc, setMessages]);
+    }, [chatId, chatsDoc, setMessages, isScrolledToBottom]);
 
     // scroll last message
     useEffect(() => {
-        const lastMessage = document.querySelector('.messages > div:last-child');   
+        const lastMessage = document.querySelector('.messages > div:last-child');
 
-        if (lastMessage) {
+        if (lastMessage && isNewMessage) {
             lastMessage.scrollIntoView({ behavior: 'smooth' });
+            setIsNewMessage(false);
         }
-    }, [messages]);
+    }, [messages, isNewMessage]);
 
+    const handleScroll = () => {
+        const messagesContainer = messagesRef.current;
+        const isBottom = messagesContainer.scrollHeight - messagesContainer.scrollTop === messagesContainer.clientHeight;
+        
+        setIsScrolledToBottom(isBottom);
+    };
 
     // close the menu if the user clicks elsewhere
     useEffect(() => {
@@ -108,7 +121,7 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
 
     return (
         <>
-            <div className="messages" ref={messagesRef}>
+            <div className="messages" ref={messagesRef} onScroll={handleScroll}>
                 {messages.slice().reverse().map((m) => (
                     <AnimatedMessage key={m.date}>
                         <div className={
