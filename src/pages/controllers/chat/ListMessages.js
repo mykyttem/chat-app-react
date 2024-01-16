@@ -30,24 +30,22 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
 
 
     useEffect(() => {
-        if (chatId) {
-            const unSub = onSnapshot(chatsDoc, (doc) => {
-                if (doc.exists()) {
-                    // sort messages by date in descending order
-                    const sortedMessages = doc.data().messages.sort((a, b) => b.date - a.date);
-                    setMessages(sortedMessages);
+        const unSub = onSnapshot(chatsDoc, (doc) => {
+            if (doc.exists()) {
+                // sort messages by date in descending order
+                const sortedMessages = doc.data().messages.sort((a, b) => b.date - a.date);
+                setMessages(sortedMessages);
 
-                    if (isScrolledToBottom) {
-                        setIsNewMessage(true);
-                    }
+                if (isScrolledToBottom) {
+                    setIsNewMessage(true);
                 }
-            });
+            }
+        });
 
-            return () => {
-                unSub();
-            };
-        }
-    }, [chatId, chatsDoc, setMessages, isScrolledToBottom]);
+        return () => {
+            unSub();
+        };
+    }, [chatId, setMessages, isScrolledToBottom]);
 
     // scroll last message
     useEffect(() => {
