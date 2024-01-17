@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from "../../../firebase/firebase";
+import { fetchPhotoURL } from "../../../firebase/getPhoto";
 
 // assets
 import avatar_companion from "../../../assets/companion.png";
@@ -55,8 +56,15 @@ const Chats = ({ usersCollection, currentUser }) => {
                             const messages = chatDocSnapshot.exists() ? chatDocSnapshot.data().messages : [];
                             const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
-                            // return
-                            return { ...userData, lastMessage };
+                            // get photo
+                            let photo;
+                            const photoURL = userData.photo;
+
+                            if (photoURL) {
+                                photo = await fetchPhotoURL(photoURL);  
+                            }
+
+                            return { ...userData, lastMessage, photo };
                         })
                     );
 
@@ -103,7 +111,7 @@ const Chats = ({ usersCollection, currentUser }) => {
             {chats.map((user, index) => (
                 <li key={index} className="side-chat" onClick={() => handleSelect({ user })}>
                     <img
-                        src={avatar_companion}
+                        src={user.photo || avatar_companion}
                         className="chat-companion-avatar"
                         alt="chat-companion-avatar"
                     />
