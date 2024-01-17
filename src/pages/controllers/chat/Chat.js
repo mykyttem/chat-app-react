@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 // firebase
 import { doc } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { db } from "../../../firebase/firebase";
 
 // animation
 import { Animated_chat } from "./animation";

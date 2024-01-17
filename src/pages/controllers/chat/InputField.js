@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 // firebase
 import { updateDoc, arrayUnion, Timestamp } from "firebase/firestore";
 import { getDownloadURL, uploadBytes, ref } from "firebase/storage";
-import { storage } from "../../../firebase";
+import { storage } from "../../../firebase/firebase";
 
 // icons
 import send from "../../../assets/icons/send.svg";
