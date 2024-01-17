@@ -1,10 +1,12 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// firebase
 import { query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth, db } from "../../../firebase";
+import { auth, db } from "../../../firebase/firebase";
 
+// assets
 import avatar_companion from "../../../assets/companion.png";
 
 
@@ -39,7 +41,9 @@ const Chats = ({ usersCollection, currentUser }) => {
                         uid_users.map(async (uid) => {
                             const q = query(usersCollection, where('uid', '==', uid));
                             const querySnapshot = await getDocs(q);
-                            const userData = querySnapshot.docs.map(doc => doc.data())[0]; // assuming one user per UID
+
+                            // assuming one user per UID
+                            const userData = querySnapshot.docs.map(doc => doc.data())[0]; 
 
                             // Fetch last message from the chat
                             const chatId = currentUser.uid > userData.uid
@@ -51,6 +55,7 @@ const Chats = ({ usersCollection, currentUser }) => {
                             const messages = chatDocSnapshot.exists() ? chatDocSnapshot.data().messages : [];
                             const lastMessage = messages.length > 0 ? messages[messages.length - 1] : null;
 
+                            // return
                             return { ...userData, lastMessage };
                         })
                     );
@@ -90,7 +95,7 @@ const Chats = ({ usersCollection, currentUser }) => {
             console.error(error);
         }
     };
-
+    
 
     // Render the list of chats
     return (

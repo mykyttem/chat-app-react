@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import AuthContainer from "./authContainer";
 import AuthForm from "./authForms";
 import { loginWithGoogle } from "./authHelpers";
-import { auth } from "../../../firebase";
+import { auth } from "../../../firebase/firebase";
 
 /**
  * Allows users to sign in with an existing account.

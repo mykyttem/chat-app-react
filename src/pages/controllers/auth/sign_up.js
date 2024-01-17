@@ -1,6 +1,6 @@
 // Import necessary dependencies and modules
 import { NavLink, useNavigate } from "react-router-dom";
-import { auth } from "../../../firebase";
+import { auth } from "../../../firebase/firebase";
 
 // Import helper functions and components
 import { loginWithGoogle } from "./authHelpers";

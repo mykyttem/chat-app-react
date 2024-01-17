@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 // Firebase
 import { collection } from "firebase/firestore";
-import { db } from "../../../firebase";
+import { db } from "../../../firebase/firebase";
 
 // Components
 import Chats from "./Chats";

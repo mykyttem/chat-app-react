@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // firebase
-import { fetchPhotoURL } from "./getPhoto";
+import { fetchPhotoURL } from "../../../firebase/getPhoto";
 
 // Import image assets
 import default_avatar from "../../../assets/defaultAvatar_profile.png";
