@@ -5,7 +5,8 @@ import "../../styles/profile/settings.scss";
 // firebase 
 import { updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider, signOut, updatePhoneNumber } from "firebase/auth";
 import { ref, uploadBytes } from "firebase/storage";
-import { storage, auth } from "../../../firebase/firebase";
+import { updateDoc, doc } from "firebase/firestore";
+import { storage, auth, db } from "../../../firebase/firebase";
 
 import { fetchPhotoURL } from "../../../firebase/getPhoto";
 
@@ -21,6 +22,9 @@ const Settings = ({ user, setModalWindow }) => {
      *  update profile - name, photoURL
      *  update password - if current correct
     */
+
+    // collections users
+    const userDocRef = doc(db, 'users', user.uid);
 
     // current data user
     const { displayName, email, phoneNumber, photoURL, uid } = user;
@@ -148,7 +152,14 @@ const Settings = ({ user, setModalWindow }) => {
                     // update imageURL
                     updateProfile(user, { "photoURL": imageURL })
                         .then(() => {
-                            setState_DataUser({ ...state_DataUser, alert: 'Succesful! New photo Updated' });
+                            // update firestore collections users
+                            updateDoc(userDocRef, { photo: imageURL })
+                                .then(() => {
+                                    setState_DataUser({ ...state_DataUser, alert: 'Succesful! New photo Updated' });
+                                })
+                                .catch((error) => {
+                                    console.error('Error updating photo in Firestore: ', error);
+                                });
                         }) 
                         .catch((error) => {
                             console.error(error);   
@@ -165,7 +176,14 @@ const Settings = ({ user, setModalWindow }) => {
         if (state_DataUser.displayName !== newName) {
             updateProfile(user, {"displayName": newName})
                 .then(() => {
-                    setState_DataUser({ ...state_DataUser, alert: 'Succesful! New Name updated' });
+                    // update firestore collections users
+                    updateDoc(userDocRef, { name: newName })
+                        .then(() => {
+                            setState_DataUser({ ...state_DataUser, alert: 'Succesful! New Name updated' });
+                        })
+                        .catch((error) => {
+                            console.error('Error updating photo in Firestore: ', error);
+                        });
                 }) 
                 .catch((error) => {
                     console.error(error);   
@@ -175,7 +193,15 @@ const Settings = ({ user, setModalWindow }) => {
         if (state_DataUser.phoneNumber !== newPhoneNumber) {
             updatePhoneNumber(user, {"phoneNumber": phoneNumber})
                 .then(() => {
-                    setState_DataUser({ ...state_DataUser, alert: 'Succesful! New phone number updated' });
+
+                    // update firestore collections users
+                    updateDoc(userDocRef, { phoneNumber: phoneNumber })
+                        .then(() => {
+                            setState_DataUser({ ...state_DataUser, alert: 'Succesful! New phone number updated' });
+                        })
+                        .catch((error) => {
+                            console.error('Error updating photo in Firestore: ', error);
+                        });
                 })
                 .catch((error) => {
                     console.error(error);
