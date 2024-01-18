@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // firebase
-import { query, where, getDocs, getDoc, doc, setDoc } from "firebase/firestore";
+import { query, where, getDocs, getDoc, doc, setDoc, deleteField, updateDoc} from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth, db } from "../../../firebase/firebase";
 import { fetchPhotoURL } from "../../../firebase/getPhoto";
@@ -24,9 +24,17 @@ const Chats = ({ usersCollection, currentUser }) => {
     // State to store the list of chats
     const [chats, setChats] = useState([]);
 
+    // context menu selected chat right click 
+    const chatRef = useRef();
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
+    const [selectedChat, setSelectedChat] = useState(null);
+
     /**
      * Fetches user data for the chats based on the authenticated user's UID.
     */
+
     const getChats = useCallback(async () => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
@@ -104,23 +112,83 @@ const Chats = ({ usersCollection, currentUser }) => {
         }
     };
     
+    // close the menu if the user clicks elsewhere
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (isMenuOpen && !e.target.closest('.menu')) {
+                setIsMenuOpen(false);
+            }
+        };
+
+        document.addEventListener('click', handleClickOutside);
+
+        return () => {
+            document.removeEventListener('click', handleClickOutside);
+        };
+    }, [isMenuOpen]);
+
+    const handle_ContextMenu = (e, selectedChat) => {
+        e.preventDefault();
+    
+        // click chat
+        const containerRect = chatRef.current.getBoundingClientRect();
+    
+        setMenuPosition({
+            top: e.clientY - containerRect.top,
+            left: e.clientX - containerRect.left,
+        });
+    
+        // set selected chat
+        setSelectedChat(selectedChat);
+    
+        // open
+        setIsMenuOpen(true);
+    };
+    
+
+    const handle_deleteChat = async () => {  
+        const currentUserUid = currentUser.uid;
+        const userDocRef = doc(db, 'own-chats', currentUserUid);
+
+        // Remove the selected chat   
+        await updateDoc(userDocRef, {
+            [selectedChat]: deleteField(),
+        });
+      
+        // Optionally, update the local state to reflect the changes
+        setChats(chats => chats.filter(chat => chat.uid !== selectedChat));
+        setIsMenuOpen(false); 
+    };
+
 
     // Render the list of chats
     return (
-        <ul className="chats">  
-            {chats.map((user, index) => (
-                <li key={index} className="side-chat" onClick={() => handleSelect({ user })}>
-                    <img
-                        src={user.photo || avatar_companion}
-                        className="chat-companion-avatar"
-                        alt="chat-companion-avatar"
-                    />
-                    <h2 className="chat-name-companion">{user.name}</h2>
-                    <h2 className="chat-message">{user.lastMessage ? user.lastMessage.text : 'No messages yet'}</h2>
-                    <div className="line"></div>
-                </li>
-            ))}
-        </ul>
+        <>
+            <ul className="chats" ref={chatRef}>  
+                {chats.map((user, index) => (
+                    <li key={index} 
+                        className="side-chat" 
+                        onClick={() => handleSelect({ user })} 
+                        onContextMenu={(e) => handle_ContextMenu(e, user.uid)}
+                    >
+                        <img
+                            src={user.photo || avatar_companion}
+                            className="chat-companion-avatar"
+                            alt="chat-companion-avatar"
+                        />
+                        <h2 className="chat-name-companion">{user.name}</h2>
+                        <h2 className="chat-message">{user.lastMessage ? user.lastMessage.text : 'No messages yet'}</h2>
+                        <div className="line"></div>
+                    </li>
+                ))}
+            </ul>
+
+            {isMenuOpen && (
+                <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
+                    <p onClick={handle_deleteChat}>Delete chat</p>
+                </div>
+            )}
+        </>
     );
 };
 
