@@ -21,7 +21,7 @@ const router = createBrowserRouter(
             <Route path="sign-up" element={ <SignUp /> } />
             <Route path="sign-in" element={ <SignIn /> } />
 
-            <Route path="/chat/:chatId/:name" element={<LoadedHome />} />
+            <Route path="/chat/:chatId" element={<LoadedHome />} />
         </Route>
     )
 )

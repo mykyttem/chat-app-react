@@ -106,7 +106,8 @@ const Chats = ({ usersCollection, currentUser }) => {
                 await setDoc(doc(db, "chats", combinedId), { messages: [] });
             }
 
-            navigate(`/chat/${combinedId}/${user.name}`);
+            navigate(`/chat/${combinedId}`, { state: {user} } );
+            console.log(user.photo);
         } catch (error) {
             console.error(error);
         }

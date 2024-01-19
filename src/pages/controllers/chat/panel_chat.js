@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 
 // firebase
 import { doc, updateDoc } from "firebase/firestore";
@@ -17,7 +17,10 @@ import avatar_companion from "../../../assets/companion.png";
 
 
 const PanelChat = () => {
-    const { name, chatId } = useParams();
+    const { state } = useLocation();
+    const { user } = state || {};
+
+    const { chatId } = useParams();
 
     // menu chat 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -56,8 +59,8 @@ const PanelChat = () => {
 
     return (
         <div className="panelChat">
-            <img src={avatar_companion} className="companion" alt="companion" />
-            <h2 className="name-companion">{name}</h2>
+            <img src={user.photo || avatar_companion} className="companion" alt="companion" />
+            <h2 className="name-companion">{user.name}</h2>
 
             <div className="icons">
                 <img src={computer_webcam_video} className="icon-webcam-video" alt="computer webcam video" />
