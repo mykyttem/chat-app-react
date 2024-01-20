@@ -6,6 +6,9 @@ import { onSnapshot, updateDoc, arrayRemove } from "firebase/firestore";
 // animation
 import { AnimatedMessage } from "./animation";
 
+// styles
+import "../../styles/chat/contextMenu.scss";
+
 
 /**
  * @description Displays a list of messages in the chat.
@@ -14,20 +17,26 @@ import { AnimatedMessage } from "./animation";
  * @param {Object} props.currentUser - Current user information.
  * @param {Array} props.messages - Array of messages in the chat.
  * @param {function} props.setMessages - State setter function for updating messages.
+ * Interaction with the message
 */
 
 
 const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) => {
 
+    // interaction with the message
     const [selectedMessage, setSelectedMessage] = useState(null);
+    const [editMessage, setEditMessage] = useState('');
+    const [isEditMessage, setIsEditMessage] = useState(false);
 
+    // menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
+    // messages
     const [isNewMessage, setIsNewMessage] = useState(false);
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
     const messagesRef = useRef();
-
+    
 
     useEffect(() => {
         const unSub = onSnapshot(chatsDoc, (doc) => {
@@ -100,7 +109,8 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
         }
     };
     
-    const handle_deleteMessage = async () => {
+
+    const handle_deleteMessage = async () => {  
         // Remove the selected message from the 'messages' array
         await updateDoc(chatsDoc, {
             messages: arrayRemove(messages.find(m => m.id === selectedMessage)),
@@ -109,6 +119,27 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
         // Clear the selectedMessage to reset for the next interaction
         setSelectedMessage(null);
         setIsMenuOpen(false); 
+    };
+
+
+    const handleEditMessage = () => {
+        setEditMessage(messages.find(m => m.id === selectedMessage)?.text || '');
+        setIsEditMessage(true);
+    };
+
+    const handleSaveEdit = async () => {
+        const editedMessages = messages.map(message =>
+          message.id === selectedMessage ? { ...message, text: editMessage } : message
+        );
+    
+        await updateDoc(chatsDoc, {
+          messages: editedMessages,
+        });
+    
+        setSelectedMessage(null);
+        setEditMessage('');
+        setIsEditMessage(false);
+        setIsMenuOpen(false);
     };
 
     const formatTimestamp = (timestamp) => {
@@ -157,11 +188,26 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
                     </AnimatedMessage>
                 ))}
             </div>
-        
+
             {isMenuOpen && (
-                <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
-                <p onClick={handle_deleteMessage}>Delete message</p>
-                </div>
+                <>
+                    <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
+                        <p onClick={handle_deleteMessage}>Delete message</p>
+                        <p onClick={handleEditMessage}>Edit</p>
+                    </div>
+
+                    {isEditMessage && (
+                        <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
+                            <input
+                                className="edit-input"
+                                type="text"
+                                value={editMessage}
+                                onChange={(e) => setEditMessage(e.target.value)}
+                            />
+                            <button className="edit-button" onClick={handleSaveEdit}>Save</button>
+                        </div>
+                    )}
+                </>
             )}
         </>
     )

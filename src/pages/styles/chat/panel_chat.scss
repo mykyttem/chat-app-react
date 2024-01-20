@@ -8,75 +8,52 @@
     border-radius: 0px 20px 20px 5px;
     background: #7767B9;
     position: relative;
-  }
-  
-  .companion {
-    position: absolute;
-    width: 50px;
-    height: 45px;
-    margin-top: 10px;
-    margin-left: 15px;
-    border-radius: 99.5px;
-  }
-  
-  .name-companion {
-    position: absolute;
-    margin-left: 80px;
-    color: #fff;
-    font-family: Inter;
-    font-size: 25px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 100%;
-  }
-  
-  .icon-webcam-video {
-    position: absolute;
-    width: 40px;
-    height: 20px;
-    margin-left: 500px;
-    margin-top: 22px;
-  }
-  
-  .icon-phone {
-    position: absolute;
-    width: 80px;
-    height: 30px;
-    margin-left: 650px;
-    margin-top: 18px;
-  }
-  
-  .icon-menu {
-    position: absolute;
-    width: 80px;
-    height: 30px;
-    margin-left: 750px;
-    margin-top: 18px;
-    cursor: pointer;
-  }
-  
-  .menu {
-    position: relative;
-    top: 55px;
-    left: 65%;
-    width: 200px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    z-index: 10;
-    border-radius: 20px 2px 20px 20px;
-  
-    p {
-      margin: 0;
-      padding: 8px;
-      cursor: pointer;
-  
-      &:hover {
-        background-color: #f0f0f0;
-      }
+
+    .companion {
+      position: absolute;
+      width: 50px;
+      height: 45px;
+      margin-top: 10px;
+      margin-left: 15px;
+      border-radius: 99.5px;
     }
-  }
-  
+    
+    .name-companion {
+      position: absolute;
+      margin-left: 80px;
+      color: #fff;
+      font-family: Inter;
+      font-size: 25px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: 100%;
+    }
+    
+    .icon-webcam-video {
+      position: absolute;
+      width: 40px;
+      height: 20px;
+      margin-left: 500px;
+      margin-top: 22px;
+    }
+    
+    .icon-phone {
+      position: absolute;
+      width: 80px;
+      height: 30px;
+      margin-left: 650px;
+      margin-top: 18px;
+    }
+    
+    .icon-menu {
+      position: absolute;
+      width: 80px;
+      height: 30px;
+      margin-left: 750px;
+      margin-top: 18px;
+      cursor: pointer;
+    }
+    
     .confirmation-dialog {
         position: fixed;
         top: 50%;
@@ -87,32 +64,33 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         z-index: 1000;
         border-radius: 10px;
-
-    p {
-        margin: 0 0 10px;
-    }
-
-    .button {
-        padding: 10px 20px;
-        margin-right: 10px;
-        cursor: pointer;
-        border: none;
-        border-radius: 5px;
-        font-size: 16px;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-            background-color: #eaeaea;
+    
+        p {
+            margin: 0 0 10px;
         }
-    }
-
-    .button-confirm {
-        background-color: #4caf50;
-        color: #fff;
-    }
-
-    .button-cancel {
-        background-color: #e74c3c;  
-        color: #fff;
+    
+        .button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+    
+            &:hover {
+                background-color: #eaeaea;
+            }
+        }
+    
+        .button-confirm {
+            background-color: #4caf50;
+            color: #fff;
+        }
+    
+        .button-cancel {
+            background-color: #e74c3c;  
+            color: #fff;
+        }   
     }
 }  
