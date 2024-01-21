@@ -8,6 +8,7 @@ import { AnimatedMessage } from "./animation";
 
 // styles
 import "../../styles/chat/contextMenu.scss";
+import "../../styles/chat/chat.scss";
 
 
 /**
@@ -21,7 +22,7 @@ import "../../styles/chat/contextMenu.scss";
 */
 
 
-const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) => {
+const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, forwardMessage }) => {
 
     // interaction with the message
     const [selectedMessage, setSelectedMessage] = useState(null);
@@ -92,28 +93,24 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
     const handle_ContextMenu = (e, message) => {
         e.preventDefault();
         
-        // click own message
-        if (message.senderId === currentUser.uid) {
-            const containerRect = messagesRef.current.getBoundingClientRect();
-    
-            setMenuPosition({
-                top: e.clientY - containerRect.top,
-                left: e.clientX - containerRect.left,
-            });
+        const containerRect = messagesRef.current.getBoundingClientRect();
 
-            // set selected message id
-            setSelectedMessage(message.id);
-            
-            // open
-            setIsMenuOpen(true);
-        }
+        setMenuPosition({
+            top: e.clientY - containerRect.top,
+            left: e.clientX - containerRect.left,
+        });
+
+        setSelectedMessage(message);
+
+        // open
+        setIsMenuOpen(true);
     };
     
 
     const handle_deleteMessage = async () => {  
         // Remove the selected message from the 'messages' array
         await updateDoc(chatsDoc, {
-            messages: arrayRemove(messages.find(m => m.id === selectedMessage)),
+            messages: arrayRemove(messages.find(m => m.id === selectedMessage.id)),
         });
 
         // Clear the selectedMessage to reset for the next interaction
@@ -123,13 +120,13 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
 
 
     const handleEditMessage = () => {
-        setEditMessage(messages.find(m => m.id === selectedMessage)?.text || '');
+        setEditMessage(messages.find(m => m.id === selectedMessage.id)?.text || '');
         setIsEditMessage(true);
     };
 
     const handleSaveEdit = async () => {
         const editedMessages = messages.map(message =>
-          message.id === selectedMessage ? { ...message, text: editMessage } : message
+            message.id === selectedMessage.id ? { ...message, text: editMessage } : message
         );
     
         await updateDoc(chatsDoc, {
@@ -142,6 +139,11 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
         setIsMenuOpen(false);
     };
 
+    const forward_message = async () => {
+        forwardMessage(selectedMessage.text);
+        setIsMenuOpen(false);
+    }
+
     const formatTimestamp = (timestamp) => {
         const dateObject = timestamp.toDate();
         return dateObject.toLocaleString(); 
@@ -153,37 +155,44 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
             <div className="messages" ref={messagesRef} onScroll={handleScroll}>
                 {messages.slice().reverse().map((m) => (
                     <AnimatedMessage key={m.date}>
-                        <div className={
-                            m.senderId === currentUser.uid
+                        <div className={ m.senderId === currentUser.uid
                             ? "bubble-own-message"
                             : "bubble-companion-message"
                         }
                         onContextMenu={(e) => handle_ContextMenu(e, m)}
                         >
 
-                        {m.imageUrl ? (
-                            <img src={m.imageUrl} alt="messageImage" style={{width: 250}}/>
-                        ) : (
-                            <>
-                                <h2 className={
-                                    m.senderId === currentUser.uid
-                                        ? "text-own-message"
-                                        : "text-companion-message"
-                                    }
-                                >
-                                    {m.text}
-                                </h2>
-                                <h2 className={
-                                        m.senderId === currentUser.uid
-                                        ? "text-own-message"
-                                        : "text-companion-message"
-                                    }
-                                    style={{ fontSize: "15px", color: "gray" }}
-                                >
-                                    {formatTimestamp(m.date)}
-                            </h2>
-                            </>
-                        )}
+                            {m.imageUrl ? (
+                                <img src={m.imageUrl} alt="messageImage" style={{width: 250}}/>
+                            ) : (
+                                <>
+                                    {m.forward && (
+                                        <>
+                                            <div className="div-forward">
+                                                <h2 className="text-forward">{m.forward}</h2>
+                                            </div>
+                                            <div className="line"></div>
+                                        </>
+                                    )}
+
+
+                                    <h2 className={ m.senderId === currentUser.uid
+                                            ? "text-own-message"
+                                            : "text-companion-message"
+                                        }
+                                    >
+                                            {m.text}
+                                    </h2>
+                                    <h2 className={ m.senderId === currentUser.uid
+                                            ? "text-own-message"
+                                            : "text-companion-message"
+                                        }
+                                            style={{ fontSize: "15px", color: "gray" }}
+                                        >
+                                            {formatTimestamp(m.date)}
+                                    </h2>
+                                </>
+                            )}
                         </div>
                     </AnimatedMessage>
                 ))}
@@ -192,8 +201,15 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages }) =
             {isMenuOpen && (
                 <>
                     <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
-                        <p onClick={handle_deleteMessage}>Delete message</p>
-                        <p onClick={handleEditMessage}>Edit</p>
+                        {selectedMessage.senderId === currentUser.uid ? (
+                            <>
+                                <p onClick={handle_deleteMessage}>Delete message</p>
+                                <p onClick={handleEditMessage}>Edit</p>
+                                <p onClick={forward_message}>Forward</p>
+                            </>
+                        ) : (
+                            <p onClick={forward_message}>Forward</p>
+                        )}
                     </div>
 
                     {isEditMessage && (

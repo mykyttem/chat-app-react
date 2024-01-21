@@ -30,7 +30,14 @@ const Chat = ({ currentUser }) => {
     const chatsDoc = chatId ? doc(db, "chats", chatId) : null;
     const [messages, setMessages] = useState([]);
 
+    // forward message
+    const [ForwardMessage, setForwardMessage] = useState(''); 
+
+    const forwardMessage = (message) => {
+        setForwardMessage(message);
+    };
     
+
     return (
         <>
             {chatId ? ( 
@@ -46,12 +53,15 @@ const Chat = ({ currentUser }) => {
 
                                 messages={messages}
                                 setMessages={setMessages}
+                                forwardMessage={forwardMessage}
                             />
     
                             <Input
                                 currentUser={currentUser}
                                 chatsDoc={chatsDoc}
                                 setMessages={setMessages}
+                                ForwardMessage={ForwardMessage}
+                                setForwardMessage={setForwardMessage}
                             />
                         </div>
                     </Animated_chat>

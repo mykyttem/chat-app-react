@@ -20,7 +20,7 @@ import img from "../../../assets/icons/img.svg";
 */
 
 
-const Input = ({ currentUser, chatsDoc, setMessages }) => {
+const Input = ({ currentUser, chatsDoc, setMessages, ForwardMessage, setForwardMessage }) => {
     const [text, setText] = useState("");
     const [img_send, setImg] = useState(null);
 
@@ -53,13 +53,14 @@ const Input = ({ currentUser, chatsDoc, setMessages }) => {
                 console.error('Error uploading image:', error);
             }
         } else {
-             // Create a new message object for text
+            // Create a new message object for text
             const newMessage = {
                 id: uuid(),
                 text,
                 senderId: currentUser.uid,
                 date: Timestamp.now(),
-            };
+                ...(ForwardMessage && { forward: ForwardMessage })
+            };  
             
             // Update state to include the new text message
             setMessages((prevMessages) => [newMessage, ...prevMessages]);
@@ -69,8 +70,9 @@ const Input = ({ currentUser, chatsDoc, setMessages }) => {
                 messages: arrayUnion(newMessage),
             });
     
-            // Clear the text input
+            // Clear state
             setText("");
+            ForwardMessage && setForwardMessage("");
         }
     };
   
@@ -112,8 +114,19 @@ const Input = ({ currentUser, chatsDoc, setMessages }) => {
         input.click();
     };
   
+    const cancelForward = () => {
+        setForwardMessage('');
+    };
+
     return (
         <div className="block-input">
+            {ForwardMessage && (
+                <div className="forward-message">
+                    <button className="cancel-forward" onClick={cancelForward}>X</button>
+                    <h2>Forward --&gt; {ForwardMessage}</h2>
+                </div>
+            )}
+
             <input
                 className="field-input"
                 type="text"
