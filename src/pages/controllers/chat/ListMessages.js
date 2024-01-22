@@ -142,7 +142,12 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
     const forward_message = async () => {
         forwardMessage(selectedMessage.text);
         setIsMenuOpen(false);
-    }
+    };
+
+    const copy_message = () => {
+        navigator.clipboard.writeText(selectedMessage.text);
+        setIsMenuOpen(false);
+    };
 
     const formatTimestamp = (timestamp) => {
         const dateObject = timestamp.toDate();
@@ -206,9 +211,13 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
                                 <p onClick={handle_deleteMessage}>Delete message</p>
                                 <p onClick={handleEditMessage}>Edit</p>
                                 <p onClick={forward_message}>Forward</p>
+                                <p onClick={copy_message}>Copy</p>
                             </>
                         ) : (
-                            <p onClick={forward_message}>Forward</p>
+                            <>
+                                <p onClick={forward_message}>Forward</p>
+                                <p onClick={copy_message}>Copy</p>
+                            </>
                         )}
                     </div>
 
