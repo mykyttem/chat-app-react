@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
 // firebase
-import { onSnapshot, updateDoc, arrayRemove } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
 
 // animation
 import { AnimatedMessage } from "./animation";
@@ -9,6 +9,9 @@ import { AnimatedMessage } from "./animation";
 // styles
 import "../../styles/chat/contextMenu.scss";
 import "../../styles/chat/chat.scss";
+
+// components
+import InteractionMessage from "./interactionWithMessage";
 
 
 /**
@@ -23,20 +26,16 @@ import "../../styles/chat/chat.scss";
 
 
 const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, forwardMessage }) => {
-
-    // interaction with the message
-    const [selectedMessage, setSelectedMessage] = useState(null);
-    const [editMessage, setEditMessage] = useState('');
-    const [isEditMessage, setIsEditMessage] = useState(false);
+    // messages
+    const [isNewMessage, setIsNewMessage] = useState(false);
+    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+    const messagesRef = useRef();
 
     // menu
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [menuPosition, setMenuPosition] = useState({ top: 0, left: 0 });
 
-    // messages
-    const [isNewMessage, setIsNewMessage] = useState(false);
-    const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
-    const messagesRef = useRef();
+    const [selectedMessage, setSelectedMessage] = useState(null);
     
 
     useEffect(() => {
@@ -74,22 +73,7 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
         setIsScrolledToBottom(isBottom);
     };
 
-    // close the menu if the user clicks elsewhere
-    useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (isMenuOpen && !e.target.closest('.menu')) {
-                setIsMenuOpen(false);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
-    }, [isMenuOpen]);
-
-    
+    // menu
     const handle_ContextMenu = (e, message) => {
         e.preventDefault();
         
@@ -105,50 +89,8 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
         // open
         setIsMenuOpen(true);
     };
-    
 
-    const handle_deleteMessage = async () => {  
-        // Remove the selected message from the 'messages' array
-        await updateDoc(chatsDoc, {
-            messages: arrayRemove(messages.find(m => m.id === selectedMessage.id)),
-        });
-
-        // Clear the selectedMessage to reset for the next interaction
-        setSelectedMessage(null);
-        setIsMenuOpen(false); 
-    };
-
-
-    const handleEditMessage = () => {
-        setEditMessage(messages.find(m => m.id === selectedMessage.id)?.text || '');
-        setIsEditMessage(true);
-    };
-
-    const handleSaveEdit = async () => {
-        const editedMessages = messages.map(message =>
-            message.id === selectedMessage.id ? { ...message, text: editMessage } : message
-        );
-    
-        await updateDoc(chatsDoc, {
-          messages: editedMessages,
-        });
-    
-        setSelectedMessage(null);
-        setEditMessage('');
-        setIsEditMessage(false);
-        setIsMenuOpen(false);
-    };
-
-    const forward_message = async () => {
-        forwardMessage(selectedMessage.text);
-        setIsMenuOpen(false);
-    };
-
-    const copy_message = () => {
-        navigator.clipboard.writeText(selectedMessage.text);
-        setIsMenuOpen(false);
-    };
-
+    // formating time message
     const formatTimestamp = (timestamp) => {
         const dateObject = timestamp.toDate();
         return dateObject.toLocaleString(); 
@@ -204,35 +146,22 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
             </div>
 
             {isMenuOpen && (
-                <>
-                    <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
-                        {selectedMessage.senderId === currentUser.uid ? (
-                            <>
-                                <p onClick={handle_deleteMessage}>Delete message</p>
-                                <p onClick={handleEditMessage}>Edit</p>
-                                <p onClick={forward_message}>Forward</p>
-                                <p onClick={copy_message}>Copy</p>
-                            </>
-                        ) : (
-                            <>
-                                <p onClick={forward_message}>Forward</p>
-                                <p onClick={copy_message}>Copy</p>
-                            </>
-                        )}
-                    </div>
+                <InteractionMessage 
+                    currentUser={currentUser}
+                    chatsDoc={chatsDoc}
+                    messages={messages}
 
-                    {isEditMessage && (
-                        <div className="menu" style={{ top: menuPosition.top, left: menuPosition.left }}>
-                            <input
-                                className="edit-input"
-                                type="text"
-                                value={editMessage}
-                                onChange={(e) => setEditMessage(e.target.value)}
-                            />
-                            <button className="edit-button" onClick={handleSaveEdit}>Save</button>
-                        </div>
-                    )}
-                </>
+                    isMenuOpen={isMenuOpen}
+                    setIsMenuOpen={setIsMenuOpen}
+                    menuPosition={menuPosition}
+
+                    messagesRef={messagesRef}
+
+                    forwardMessage={forwardMessage}
+
+                    selectedMessage={selectedMessage}
+                    setSelectedMessage={setSelectedMessage}
+                />
             )}
         </>
     )
