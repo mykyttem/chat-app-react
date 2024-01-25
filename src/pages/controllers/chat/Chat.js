@@ -36,14 +36,19 @@ const Chat = ({ currentUser }) => {
     const forwardMessage = (message) => {
         setForwardMessage(message);
     };
-    
+
+    // search message
+    const [searchMessage, setSearchMessage] = useState('');
+
 
     return (
         <>
             {chatId ? ( 
                 <>
                     <Animated_chat>
-                        <PanelChat />
+                        <PanelChat 
+                            setSearchMessage={setSearchMessage}
+                        />
 
                         <div className="chat">
                             <MessageList 
@@ -54,12 +59,15 @@ const Chat = ({ currentUser }) => {
                                 messages={messages}
                                 setMessages={setMessages}
                                 forwardMessage={forwardMessage}
+
+                                searchMessage={searchMessage}
                             />
     
                             <Input
                                 currentUser={currentUser}
                                 chatsDoc={chatsDoc}
                                 setMessages={setMessages}
+                                
                                 ForwardMessage={ForwardMessage}
                                 setForwardMessage={setForwardMessage}
                             />

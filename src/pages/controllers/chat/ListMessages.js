@@ -25,7 +25,7 @@ import InteractionMessage from "./interactionWithMessage";
 */
 
 
-const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, forwardMessage }) => {
+const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, forwardMessage, searchMessage }) => {
     // messages
     const [isNewMessage, setIsNewMessage] = useState(false);
     const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
@@ -106,6 +106,9 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
                             ? "bubble-own-message"
                             : "bubble-companion-message"
                         }
+                        style={{
+                            boxShadow: m.text === searchMessage ? "0 0 100px rgba(122, 255, 255, 10)" : "none"
+                        }}
                         onContextMenu={(e) => handle_ContextMenu(e, m)}
                         >
 
@@ -122,13 +125,13 @@ const MessageList = ({ chatId, chatsDoc, currentUser, messages, setMessages, for
                                         </>
                                     )}
 
-
                                     <h2 className={ m.senderId === currentUser.uid
                                             ? "text-own-message"
                                             : "text-companion-message"
                                         }
                                     >
                                             {m.text}
+                                            
                                     </h2>
                                     <h2 className={ m.senderId === currentUser.uid
                                             ? "text-own-message"

@@ -16,11 +16,14 @@ import menu_chat from "../../../assets/icons/menu_chat.svg";
 import avatar_companion from "../../../assets/companion.png";
 
 
-const PanelChat = () => {
+const PanelChat = ({ setSearchMessage }) => {
     const { state } = useLocation();
     const { user } = state || {};
 
     const { chatId } = useParams();
+
+    // menu input search message
+    const [isSearchMessage, setIsSearchMessage] = useState(false);
 
     // menu chat 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +31,7 @@ const PanelChat = () => {
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+        setIsSearchMessage(!setIsSearchMessage);
     };
 
     const handle_ClearHistory = () => {
@@ -57,6 +61,10 @@ const PanelChat = () => {
         setShowConfirmationDialog(false);
     };
 
+    const menuSearchMessage = () => {
+        setIsSearchMessage(true);
+    };
+
     return (
         <div className="panelChat">
             <img src={user.photo || avatar_companion} className="companion" alt="companion" />
@@ -72,7 +80,19 @@ const PanelChat = () => {
                     <Animated_menu>
                             <div className="menu">
                                 <p onClick={handle_ClearHistory}>Clear history</p>
+                                <p onClick={menuSearchMessage}>Search message</p>
                             </div>
+
+                            {isSearchMessage && (
+                                <div className="menu">
+                                    <input
+                                        type="text"
+                                        placeholder="Search messages"
+                                        style={{ color: "black" }}
+                                        onChange={(e) => setSearchMessage(e.target.value)}
+                                    />
+                                </div>
+                            )}
                     </Animated_menu>
                 )}
 
