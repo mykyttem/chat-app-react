@@ -14,6 +14,9 @@ import { fetchPhotoURL } from "../../../firebase/getPhoto";
 import default_avatar from "../../../assets/defaultAvatar_profile.png";
 import logout from "../../../assets/icons/logout.svg";
 
+// animations
+import AnimatedSettings from "./animation";
+
 
 const Settings = ({ user, setModalWindow }) => {
     /**
@@ -224,91 +227,93 @@ const Settings = ({ user, setModalWindow }) => {
 
     return (
         <div className="modal-overlay">
-            <div className="modal">
+            <AnimatedSettings>
+                <div className="modal">
 
-                <h2 className="title-name">Name</h2>
-                <div className="change-name">
-                    <input 
-                        className="type-change-name" 
-                        placeholder="Type your name..."
-                        type="text"
-                        value={state_DataUser.newName}
-                        onChange={(e) => setState_DataUser({ ...state_DataUser, newName: e.target.value })}
-                    />
-                </div>
-
-                <h2 className="title-email">Email</h2>
-                <div className="change-email">
-                    <input 
-                        className="type-change-email" 
-                        placeholder="Type your email..."
-                        type="email"
-                        value={state_DataUser.newEmail}
-                        onChange={(e) => setState_DataUser({ ...state_DataUser, newEmail: e.target.value })}
-                    />
-                </div>
-
-                <h2 className="title-current-password">Current password</h2>
-                <div className="current-password">
-                    <input 
-                        className="type-current-password" 
-                        placeholder="Type your current password..."
-                        type="password"
-                        value={state_DataUser.currentPassword}
-                        onChange={(e) => setState_DataUser({ ...state_DataUser, currentPassword: e.target.value })}
-                    />
-                </div>
-
-                <h2 className="title-password">Password</h2>
-                <div className="change-password">
-                    <input 
-                        className="type-change-password" 
-                        placeholder="Type your new password..."
-                        type="password"
-                        value={state_DataUser.newPassword}
-                        onChange={(e) => setState_DataUser({ ...state_DataUser, newPassword: e.target.value })}
-                    />
-                </div>
-
-
-
-                {stateImage.loadedImage ? (
-                    <img
-                        src={stateImage.imageSrc}
-                        className="current-photo"
-                        alt="current avatar"
-                    />
-                    ) : (
-                    <img 
-                        src={photo || default_avatar} 
-                        className="current-photo" 
-                        alt="default avatar" 
-                    />
-                )}
-                <div className="change-photo">
-                    <h2 className="text-upload">
-                        {stateImage.nameImage ? `${stateImage.nameImage}` : 'Upload'}
-                    </h2>
-                        <input
-                            className="upload-file"
-                            type="file"
-                            onChange={handleImageChange}
+                    <h2 className="title-name">Name</h2>
+                    <div className="change-name">
+                        <input 
+                            className="type-change-name" 
+                            placeholder="Type your name..."
+                            type="text"
+                            value={state_DataUser.newName}
+                            onChange={(e) => setState_DataUser({ ...state_DataUser, newName: e.target.value })}
                         />
+                    </div>
+
+                    <h2 className="title-email">Email</h2>
+                    <div className="change-email">
+                        <input 
+                            className="type-change-email" 
+                            placeholder="Type your email..."
+                            type="email"
+                            value={state_DataUser.newEmail}
+                            onChange={(e) => setState_DataUser({ ...state_DataUser, newEmail: e.target.value })}
+                        />
+                    </div>
+
+                    <h2 className="title-current-password">Current password</h2>
+                    <div className="current-password">
+                        <input 
+                            className="type-current-password" 
+                            placeholder="Type your current password..."
+                            type="password"
+                            value={state_DataUser.currentPassword}
+                            onChange={(e) => setState_DataUser({ ...state_DataUser, currentPassword: e.target.value })}
+                        />
+                    </div>
+
+                    <h2 className="title-password">Password</h2>
+                    <div className="change-password">
+                        <input 
+                            className="type-change-password" 
+                            placeholder="Type your new password..."
+                            type="password"
+                            value={state_DataUser.newPassword}
+                            onChange={(e) => setState_DataUser({ ...state_DataUser, newPassword: e.target.value })}
+                        />
+                    </div>
+
+
+
+                    {stateImage.loadedImage ? (
+                        <img
+                            src={stateImage.imageSrc}
+                            className="current-photo"
+                            alt="current avatar"
+                        />
+                        ) : (
+                        <img 
+                            src={photo || default_avatar} 
+                            className="current-photo" 
+                            alt="default avatar" 
+                        />
+                    )}
+                    <div className="change-photo">
+                        <h2 className="text-upload">
+                            {stateImage.nameImage ? `${stateImage.nameImage}` : 'Upload'}
+                        </h2>
+                            <input
+                                className="upload-file"
+                                type="file"
+                                onChange={handleImageChange}
+                            />
+                    </div>
+
+                    {state_DataUser.alert && <h2 className="text-handler-photo">{state_DataUser.alert}</h2>}
+
+                
+                    <img 
+                        src={logout} 
+                        className="button_profile_logout_icon"
+                        alt="button_profile_logout"
+                        onClick={handleLogout}
+                    />
+                
+                    <button className="button-cancel" onClick={cancel_CloseModal}>Cancel</button>
+                    <button className="button-save" onClick={apply}>Apply</button>
                 </div>
-
-                {state_DataUser.alert && <h2 className="text-handler-photo">{state_DataUser.alert}</h2>}
-
-            
-                <img 
-                    src={logout} 
-                    className="button_profile_logout_icon"
-                    alt="button_profile_logout"
-                    onClick={handleLogout}
-                />
-            
-                <button className="button-cancel" onClick={cancel_CloseModal}>Cancel</button>
-                <button className="button-save" onClick={apply}>Apply</button>
-            </div>
+            </AnimatedSettings>
         </div>
     )
 }
